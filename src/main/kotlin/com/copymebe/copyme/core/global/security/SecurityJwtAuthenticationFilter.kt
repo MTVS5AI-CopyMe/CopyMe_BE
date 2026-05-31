@@ -1,11 +1,11 @@
 package com.copymebe.copyme.core.global.security
 
+import com.copymebe.copyme.core.global.exception.BaseException
+import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import com.copymebe.copyme.core.global.exception.BaseException
-import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,6 +28,12 @@ class SecurityJwtAuthenticationFilter(
     )
 
     private val expiredAccessTokenException = ExpiredAccessTokenException()
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        return SecurityPaths.PUBLIC_PATHS.any {
+            it == request.servletPath
+        }
+    }
 
     override fun doFilterInternal(
         request: HttpServletRequest,
