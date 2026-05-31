@@ -17,7 +17,7 @@ class MemberDeviceInfo protected constructor(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    val member: Member,
+    val member: Member
 ) : BaseEntity() {
     companion object {
         fun create(
