@@ -30,4 +30,8 @@ class SignupAuthenticationManagerRequest protected constructor(
             )
         }
     }
+
+    fun isExpired(): Boolean {
+        return expiredAt.isBefore(LocalDateTime.now())
+    }
 }

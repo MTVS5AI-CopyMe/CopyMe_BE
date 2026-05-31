@@ -1,6 +1,7 @@
 package com.copymebe.copyme.core.domain.auth.models
 
-import com.copymebe.copyme.core.domain.auth.MaxSignupAuthRequestExceeded
+import com.copymebe.copyme.core.domain.auth.MaxSignupAuthRequestExceededException
+import com.copymebe.copyme.core.domain.auth.SignupAuthCodeExpiredException
 import com.copymebe.copyme.core.domain.base.BaseEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -36,7 +37,7 @@ class SignupAuthenticationManager protected constructor(
         expiredAt: LocalDateTime,
     ) {
         if (requests.size >= MAX_REQUEST_COUNT) {
-            throw MaxSignupAuthRequestExceeded()
+            throw MaxSignupAuthRequestExceededException()
         }
 
         requests.add(
@@ -50,6 +51,28 @@ class SignupAuthenticationManager protected constructor(
 
     fun removeRequest(requestId: UUID) {
         requests.removeIf { it.id == requestId }
+    }
+
+    fun authenticate(authCode: String): Boolean {
+        return try {
+            requests
+                .find { it.authCode == authCode }
+                ?.let { request ->
+                    if (request.isExpired()) {
+                        throw SignupAuthCodeExpiredException()
+                    }
+
+                    removeRequest(request.id)
+                    true
+                }
+                ?: false
+        } finally {
+            refreshRequests()
+        }
+    }
+
+    fun refreshRequests() {
+        requests.removeIf { it.isExpired() }
     }
 
 }
