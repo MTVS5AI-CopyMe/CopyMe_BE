@@ -41,6 +41,8 @@ dependencies {
     // rest client
     implementation("org.springframework.boot:spring-boot-starter-restclient")
     testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
+    // swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
     // security
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
