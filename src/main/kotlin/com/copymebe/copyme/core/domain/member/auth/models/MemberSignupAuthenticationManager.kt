@@ -1,13 +1,13 @@
-package com.copymebe.copyme.core.domain.auth.models
+package com.copymebe.copyme.core.domain.member.auth.models
 
-import com.copymebe.copyme.core.domain.auth.MaxSignupAuthRequestExceededException
-import com.copymebe.copyme.core.domain.auth.SignupAuthCodeExpiredException
 import com.copymebe.copyme.core.domain.base.BaseEntity
+import com.copymebe.copyme.core.domain.member.auth.MaxSignupAuthRequestExceededException
+import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthCodeExpiredException
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "signup_authentication_manager")
-class SignupAuthenticationManager protected constructor(
+@Table(name = "member_signup_authentication_manager")
+class MemberSignupAuthenticationManager protected constructor(
     @Column(name = "email", nullable = false)
     var email: String,
 
@@ -16,15 +16,15 @@ class SignupAuthenticationManager protected constructor(
         cascade = [CascadeType.ALL],
         orphanRemoval = true
     )
-    val requests: MutableList<SignupAuthenticationManagerRequest> = mutableListOf(),
+    val requests: MutableList<MemberSignupAuthenticationManagerRequest> = mutableListOf(),
 ) : BaseEntity() {
     companion object {
         const val MAX_REQUEST_COUNT = 3
 
         fun create(
             email: String,
-        ): SignupAuthenticationManager {
-            return SignupAuthenticationManager(
+        ): MemberSignupAuthenticationManager {
+            return MemberSignupAuthenticationManager(
                 email = email,
             )
         }
@@ -34,7 +34,7 @@ class SignupAuthenticationManager protected constructor(
      * 인증요청 추가
      */
     fun addRequestOrThrow(
-    ): SignupAuthenticationManagerRequest {
+    ): MemberSignupAuthenticationManagerRequest {
         // 만료된 인증요청 제거
         initExpiredRequests()
 
@@ -43,7 +43,7 @@ class SignupAuthenticationManager protected constructor(
             throw MaxSignupAuthRequestExceededException()
         }
 
-        return SignupAuthenticationManagerRequest
+        return MemberSignupAuthenticationManagerRequest
             .create(manager = this)
             .also { newRequest ->
                 // 인증요청 추가
@@ -61,13 +61,13 @@ class SignupAuthenticationManager protected constructor(
                 ?.let { request ->
                     // 인증요청이 만료되었다면 throw
                     if (request.isExpired()) {
-                        throw SignupAuthCodeExpiredException()
+                        throw MemberSignupAuthCodeExpiredException()
                     }
 
                     // 인증완료시 모든 인증요청 제거
                     requests.clear()
                 }
-                ?: throw SignupAuthCodeExpiredException()
+                ?: throw MemberSignupAuthCodeExpiredException()
         } finally {
             initExpiredRequests()
         }

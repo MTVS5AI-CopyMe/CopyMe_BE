@@ -1,8 +1,8 @@
 package com.copymebe.copyme.resources.member.signup
 
-import com.copymebe.copyme.core.domain.member.AlreadyExistsMemberException
-import com.copymebe.copyme.core.domain.member.MemberRepo
-import com.copymebe.copyme.core.domain.member.models.Member
+import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
+import com.copymebe.copyme.core.domain.member.member.MemberRepo
+import com.copymebe.copyme.core.domain.member.member.models.Member
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
 import io.swagger.v3.oas.annotations.Operation

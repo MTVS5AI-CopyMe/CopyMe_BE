@@ -1,4 +1,4 @@
-package com.copymebe.copyme.core.domain.member.models
+package com.copymebe.copyme.core.domain.member.member.models
 
 import com.copymebe.copyme.core.domain.base.BaseEntity
 import jakarta.persistence.*

@@ -1,4 +1,4 @@
-package com.copymebe.copyme.core.domain.member
+package com.copymebe.copyme.core.domain.member.member
 
 import com.copymebe.copyme.core.domain.base.ExceptionMetadata
 import com.copymebe.copyme.core.global.exception.BaseException

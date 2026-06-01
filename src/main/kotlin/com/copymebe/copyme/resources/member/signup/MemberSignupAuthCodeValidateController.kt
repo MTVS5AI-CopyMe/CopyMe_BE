@@ -1,8 +1,8 @@
 package com.copymebe.copyme.resources.member.signup
 
-import com.copymebe.copyme.core.domain.auth.SignupAuthCodeExpiredException
-import com.copymebe.copyme.core.domain.auth.SignupAuthenticationManagerRepo
-import com.copymebe.copyme.core.domain.auth.models.SignupAuthenticationManager
+import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthCodeExpiredException
+import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthenticationManagerRepo
+import com.copymebe.copyme.core.domain.member.auth.models.MemberSignupAuthenticationManager
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
 import io.swagger.v3.oas.annotations.Operation
@@ -35,12 +35,12 @@ data class MemberSignupAuthCodeValidateRequest(
 @Tag(name = "Member")
 @RestController
 class MemberSignupAuthCodeValidateController(
-    private val signupAuthenticationManagerRepo: SignupAuthenticationManagerRepo,
+    private val memberSignupAuthenticationManagerRepo: MemberSignupAuthenticationManagerRepo,
 ) {
     @Operation(summary = "멤버 회원가입 인증코드 검증")
     @ApiResponse(responseCode = "200")
     @ApiExceptions(
-        SignupAuthCodeExpiredException::class,
+        MemberSignupAuthCodeExpiredException::class,
     )
     @PostMapping("/members/signup/authcode-validate")
     fun validateSignupAuthCode(
@@ -49,16 +49,16 @@ class MemberSignupAuthCodeValidateController(
         val email = req.email
 
         // 회원가입 인증 매니저 불러오기
-        val signupAuthenticationManager =
-            signupAuthenticationManagerRepo
+        val memberSignupAuthenticationManager =
+            memberSignupAuthenticationManagerRepo
                 .findByEmail(email)
-                ?: SignupAuthenticationManager.create(email)
+                ?: MemberSignupAuthenticationManager.create(email)
 
         // 인증 매니저에 인증 요청
-        signupAuthenticationManager.authenticateOrThrow(req.authCode)
+        memberSignupAuthenticationManager.authenticateOrThrow(req.authCode)
 
         // 저장
-        signupAuthenticationManagerRepo.save(signupAuthenticationManager)
+        memberSignupAuthenticationManagerRepo.save(memberSignupAuthenticationManager)
 
         // 이메일 인증토큰
         // TODO: JWT로 변경하기

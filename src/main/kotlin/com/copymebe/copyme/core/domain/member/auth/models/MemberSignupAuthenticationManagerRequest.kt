@@ -1,4 +1,4 @@
-package com.copymebe.copyme.core.domain.auth.models
+package com.copymebe.copyme.core.domain.member.auth.models
 
 import com.copymebe.copyme.core.domain.base.BaseEntity
 import jakarta.persistence.*
@@ -6,8 +6,8 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-@Table(name = "signup_authentication_manager_request")
-class SignupAuthenticationManagerRequest protected constructor(
+@Table(name = "member_signup_authentication_manager_request")
+class MemberSignupAuthenticationManagerRequest protected constructor(
     @Column(name = "auth_code", nullable = false)
     var authCode: String,
 
@@ -16,18 +16,18 @@ class SignupAuthenticationManagerRequest protected constructor(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id", nullable = false)
-    val manager: SignupAuthenticationManager
+    val manager: MemberSignupAuthenticationManager
 ) : BaseEntity() {
     companion object {
         const val EXPIRED_MINUTES: Long = 10
 
         fun create(
-            manager: SignupAuthenticationManager
-        ): SignupAuthenticationManagerRequest {
+            manager: MemberSignupAuthenticationManager
+        ): MemberSignupAuthenticationManagerRequest {
             val authCode = generateAuthCode()
             val expiredAt = LocalDateTime.now().plusMinutes(EXPIRED_MINUTES)
 
-            return SignupAuthenticationManagerRequest(
+            return MemberSignupAuthenticationManagerRequest(
                 authCode = authCode,
                 expiredAt = expiredAt,
                 manager = manager

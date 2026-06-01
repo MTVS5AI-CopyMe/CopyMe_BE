@@ -1,10 +1,10 @@
 package com.copymebe.copyme.resources.member.signup
 
-import com.copymebe.copyme.core.domain.auth.MaxSignupAuthRequestExceededException
-import com.copymebe.copyme.core.domain.auth.SignupAuthenticationManagerRepo
-import com.copymebe.copyme.core.domain.auth.models.SignupAuthenticationManager
-import com.copymebe.copyme.core.domain.member.AlreadyExistsMemberException
-import com.copymebe.copyme.core.domain.member.MemberRepo
+import com.copymebe.copyme.core.domain.member.auth.MaxSignupAuthRequestExceededException
+import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthenticationManagerRepo
+import com.copymebe.copyme.core.domain.member.auth.models.MemberSignupAuthenticationManager
+import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
+import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
 import io.swagger.v3.oas.annotations.Operation
@@ -30,7 +30,7 @@ data class MemberSignupAuthCodeRequest(
 @RestController
 class MemberSignupAuthCodeRequestController(
     private val memberRepo: MemberRepo,
-    private val signupAuthenticationManagerRepo: SignupAuthenticationManagerRepo,
+    private val memberSignupAuthenticationManagerRepo: MemberSignupAuthenticationManagerRepo,
 ) {
     @Operation(summary = "멤버 회원가입 인증코드 요청")
     @ApiResponse(responseCode = "200")
@@ -52,18 +52,18 @@ class MemberSignupAuthCodeRequestController(
             }
 
         // 회원가입 인증 매니저 불러오기
-        val signupAuthenticationManager =
-            signupAuthenticationManagerRepo
+        val memberSignupAuthenticationManager =
+            memberSignupAuthenticationManagerRepo
                 .findByEmail(email)
-                ?: SignupAuthenticationManager.create(email)
+                ?: MemberSignupAuthenticationManager.create(email)
 
         // 인증 매니저에 인증요청 추가
-        val newAuthCodeRequest = signupAuthenticationManager.addRequestOrThrow()
+        val newAuthCodeRequest = memberSignupAuthenticationManager.addRequestOrThrow()
         println(newAuthCodeRequest.authCode)
         // TODO: 이메일로 AuthCode 전송하기
 
         // 저장
-        signupAuthenticationManagerRepo.save(signupAuthenticationManager)
+        memberSignupAuthenticationManagerRepo.save(memberSignupAuthenticationManager)
 
         return CustomResponseEntity(data = true)
     }

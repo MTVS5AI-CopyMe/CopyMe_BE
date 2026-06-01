@@ -1,4 +1,4 @@
-package com.copymebe.copyme.core.domain.auth
+package com.copymebe.copyme.core.domain.member.auth
 
 import com.copymebe.copyme.core.domain.base.ExceptionMetadata
 import com.copymebe.copyme.core.global.exception.BaseException
@@ -17,7 +17,7 @@ class MaxSignupAuthRequestExceededException : BaseException(
     }
 }
 
-class SignupAuthCodeExpiredException : BaseException(
+class MemberSignupAuthCodeExpiredException : BaseException(
     code = CODE,
     status = HTTP_STATUS,
     message = MESSAGE,
