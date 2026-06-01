@@ -13,6 +13,7 @@ import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotEmpty
 import org.hibernate.validator.constraints.URL
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -59,6 +60,7 @@ data class MemberSignupRequest(
 @RestController
 class MemberSignupController(
     private val memberRepo: MemberRepo,
+    private val passwordEncoder: PasswordEncoder,
 ) {
     @Operation(summary = "멤버 회원가입")
     @ApiResponse(responseCode = "200")
@@ -84,7 +86,7 @@ class MemberSignupController(
         // 신규 멤버 생성
         val newMember = Member.create(
             email = req.email,
-            password = req.password,
+            password = passwordEncoder.encode(req.password)!!,
             profileImageUrl = req.profileImageUrl,
             nickname = req.nickname,
         )

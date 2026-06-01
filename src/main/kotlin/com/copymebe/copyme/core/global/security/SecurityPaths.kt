@@ -13,6 +13,7 @@ object SecurityPaths {
         "/v3/api-docs/**",
         //
         "/members/signup/**",
+        "/members/signin/**",
         // "/signin",
     )
 }

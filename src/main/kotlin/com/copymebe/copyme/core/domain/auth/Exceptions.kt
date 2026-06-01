@@ -29,3 +29,16 @@ class SignupAuthCodeExpiredException : BaseException(
         override val HTTP_STATUS = HttpStatus.UNAUTHORIZED
     }
 }
+
+class NotValidMemberCredentialException : BaseException(
+    code = CODE,
+    status = HTTP_STATUS,
+    message = MESSAGE,
+) {
+    companion object : ExceptionMetadata {
+        override val CODE = "NOT_VALID_MEMBER_CREDENTIAL"
+        override val MESSAGE = "인증 실패"
+        override val DESCRIPTION = "$CODE: $MESSAGE"
+        override val HTTP_STATUS = HttpStatus.UNAUTHORIZED
+    }
+}
