@@ -41,19 +41,26 @@ class Member protected constructor(
     }
 
     // Device
-    fun addDevice(
+    fun upsertDevice(
         deviceUid: String,
         fcmToken: String,
         refreshToken: String,
     ) {
-        devices.add(
-            MemberDeviceInfo.create(
-                member = this,
-                deviceUid = deviceUid,
-                fcmToken = fcmToken,
-                refreshToken = refreshToken,
-            )
-        )
+        devices.find { it.deviceUid == deviceUid }
+            ?.apply {
+                this.fcmToken = fcmToken
+                this.refreshToken = refreshToken
+            }
+            ?: run {
+                devices.add(
+                    MemberDeviceInfo.create(
+                        member = this,
+                        deviceUid = deviceUid,
+                        fcmToken = fcmToken,
+                        refreshToken = refreshToken,
+                    )
+                )
+            }
     }
 
     fun removeDevice(deviceUid: String) {

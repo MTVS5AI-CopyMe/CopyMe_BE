@@ -1,13 +1,13 @@
 package com.copymebe.copyme.resources.member.signup
 
-import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthCodeExpiredException
+import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthCodeInvalidException
 import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthenticationManagerRepo
 import com.copymebe.copyme.core.domain.member.auth.models.MemberSignupAuthenticationManager
+import com.copymebe.copyme.core.domain.member.auth.services.MemberSignupAuthTokenProvider
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
@@ -32,15 +32,15 @@ data class MemberSignupAuthCodeValidateRequest(
     val authCode: String,
 )
 
-@Tag(name = "Member")
+@Tag(name = "Member Signup")
 @RestController
 class MemberSignupAuthCodeValidateController(
     private val memberSignupAuthenticationManagerRepo: MemberSignupAuthenticationManagerRepo,
+    private val memberSignupAuthTokenProvider: MemberSignupAuthTokenProvider,
 ) {
     @Operation(summary = "멤버 회원가입 인증코드 검증")
-    @ApiResponse(responseCode = "200")
     @ApiExceptions(
-        MemberSignupAuthCodeExpiredException::class,
+        MemberSignupAuthCodeInvalidException::class,
     )
     @PostMapping("/members/signup/authcode-validate")
     fun validateSignupAuthCode(
@@ -61,8 +61,7 @@ class MemberSignupAuthCodeValidateController(
         memberSignupAuthenticationManagerRepo.save(memberSignupAuthenticationManager)
 
         // 이메일 인증토큰
-        // TODO: JWT로 변경하기
-        val emailAuthToken = "asdasd123"
+        val emailAuthToken = memberSignupAuthTokenProvider.createToken(email)
 
         return CustomResponseEntity(data = emailAuthToken)
     }

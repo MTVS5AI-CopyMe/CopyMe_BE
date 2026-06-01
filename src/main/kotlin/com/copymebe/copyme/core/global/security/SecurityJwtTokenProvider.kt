@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Component
+import java.time.Duration
 import java.util.*
 import javax.crypto.SecretKey
 
@@ -18,8 +19,10 @@ import javax.crypto.SecretKey
 class SecurityJwtTokenProvider(
     @Value($$"${spring.security.jwt.secret}")
     private val secretKeyStr: String,
-    @Value($$"${spring.security.jwt.expiredAtMillis}")
-    private val expiredAtMillisStr: Long,
+    @Value($$"${spring.security.jwt.access-token-duration}")
+    private val accessTokenDuration: Duration,
+    @Value($$"${spring.security.jwt.refresh-token-duration}")
+    private val refreshTokenDuration: Duration,
 ) {
     private val secretKey: SecretKey by lazy {
         secretKeyStr
@@ -27,11 +30,30 @@ class SecurityJwtTokenProvider(
             .let(Keys::hmacShaKeyFor)
     }
 
-    fun createToken(
+    fun createAccessToken(
         authentication: Authentication,
         userId: String,
     ): String {
-        val expiredAt = Date(System.currentTimeMillis() + expiredAtMillisStr)
+        val expiredAt = Date(
+            System.currentTimeMillis() + accessTokenDuration.toMillis()
+        )
+
+        return Jwts.builder()
+            .subject(authentication.name)
+            .claim("userId", userId)
+            .claim("roles", authentication.authorities.map { it.authority })
+            .signWith(secretKey)
+            .expiration(expiredAt)
+            .compact()
+    }
+
+    fun createRefreshToken(
+        authentication: Authentication,
+        userId: String,
+    ): String {
+        val expiredAt = Date(
+            System.currentTimeMillis() + refreshTokenDuration.toMillis()
+        )
 
         return Jwts.builder()
             .subject(authentication.name)

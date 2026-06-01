@@ -1,16 +1,18 @@
 package com.copymebe.copyme.resources.member.signin
 
-import com.copymebe.copyme.core.domain.member.auth.NotValidMemberCredentialException
+import com.copymebe.copyme.core.domain.member.auth.InvalidMemberCredentialException
 import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
+import com.copymebe.copyme.core.global.security.SecurityJwtTokenProvider
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotEmpty
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -47,35 +49,82 @@ data class MemberSignInRequest(
     val fcmToken: String,
 )
 
-@Tag(name = "Member")
+data class MemberSignInResponse(
+    @Schema(description = "Member ID")
+    val memberId: UUID,
+
+    @Schema(description = "Access Token")
+    val accessToken: String,
+
+    @Schema(description = "Refresh Token")
+    val refreshToken: String,
+)
+
+@Tag(name = "Member Signin")
 @RestController
 class MemberSignInController(
     private val memberRepo: MemberRepo,
     private val passwordEncoder: PasswordEncoder,
+    private val securityJwtTokenProvider: SecurityJwtTokenProvider,
 ) {
     @Operation(summary = "멤버 로그인")
     @ApiExceptions(
         AlreadyExistsMemberException::class,
-        NotValidMemberCredentialException::class,
+        InvalidMemberCredentialException::class,
     )
     @PostMapping("/members/signin")
     fun signup(
         @RequestBody @Valid req: MemberSignInRequest,
-    ): CustomResponseEntity<UUID> {
+    ): CustomResponseEntity<MemberSignInResponse> {
         val member = memberRepo.findByEmail(req.email)
             ?: throw AlreadyExistsMemberException()
 
+        // 비밀번호 일치 확인
         passwordEncoder
             .matches(req.password, member.password)
             .let { isMatched ->
                 // 비밀번호 미일치시 Throw
                 if (isMatched.not()) {
-                    throw NotValidMemberCredentialException()
+                    throw InvalidMemberCredentialException()
                 }
             }
 
-        // TODO: DeviceInfo 추가하기
+        // 토큰 그룹 발급
+        val (accessToken, refreshToken) = UsernamePasswordAuthenticationToken(
+            member.email,
+            ""
+        ).let { authentication ->
+            val memberId = member.id.toString()
 
-        return CustomResponseEntity(data = member.id)
+            val accessToken = securityJwtTokenProvider.createAccessToken(
+                authentication = authentication,
+                userId = memberId,
+            )
+
+            val refreshToken = securityJwtTokenProvider.createRefreshToken(
+                authentication = authentication,
+                userId = memberId,
+            )
+
+            Pair(accessToken, refreshToken)
+        }
+
+        // 디바이스 정보 덮어쓰기
+        member.upsertDevice(
+            deviceUid = req.deviceUid,
+            fcmToken = req.fcmToken,
+            refreshToken = refreshToken
+        )
+
+        // 저장
+        memberRepo.save(member)
+
+        return CustomResponseEntity(
+            data = MemberSignInResponse(
+                memberId = member.id,
+                accessToken = accessToken,
+                refreshToken = refreshToken
+            )
+        )
     }
 }

@@ -13,4 +13,10 @@ spring:
   security:
     jwt:
       secret: "dGVzdC1wcm9qZWN0LWpzb24td2ViLXRva2Vu"
-      expiredAtMillis: 3600000
+      access-token-duration: 1d
+      refresh-token-duration: 7d
+
+  member:
+    signup:
+      auth-token:
+        secret: "dGVzdC1wcm9qZWN0LW1lbWJlci1zaWdudXAtanNvbi13ZWItdG9rZW4="

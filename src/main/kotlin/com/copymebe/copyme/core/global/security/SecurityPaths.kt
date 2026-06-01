@@ -14,6 +14,7 @@ object SecurityPaths {
         //
         "/members/signup/**",
         "/members/signin/**",
+        "/members/nickname-check"
         // "/signin",
     )
 }

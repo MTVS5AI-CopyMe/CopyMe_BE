@@ -29,3 +29,16 @@ class AlreadyExistsMemberException : BaseException(
         override val HTTP_STATUS = HttpStatus.BAD_REQUEST
     }
 }
+
+class AlreadyExistsMemberNicknameException : BaseException(
+    code = CODE,
+    status = HTTP_STATUS,
+    message = MESSAGE,
+) {
+    companion object : ExceptionMetadata {
+        override val CODE = "ALREADY_EXISTS_MEMBER_NICKNAME"
+        override val MESSAGE = "이미 사용중인 닉네임"
+        override val DESCRIPTION = "$CODE: $MESSAGE"
+        override val HTTP_STATUS = HttpStatus.BAD_REQUEST
+    }
+}

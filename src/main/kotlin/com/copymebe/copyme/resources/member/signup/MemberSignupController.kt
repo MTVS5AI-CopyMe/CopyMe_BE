@@ -1,13 +1,15 @@
 package com.copymebe.copyme.resources.member.signup
 
+import com.copymebe.copyme.core.domain.member.auth.MemberSignupEmailTokenInvalidException
+import com.copymebe.copyme.core.domain.member.auth.services.MemberSignupAuthTokenProvider
 import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
+import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberNicknameException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.domain.member.member.models.Member
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
@@ -56,22 +58,32 @@ data class MemberSignupRequest(
     val emailAuthToken: String,
 )
 
-@Tag(name = "Member")
+@Tag(name = "Member Signup")
 @RestController
 class MemberSignupController(
     private val memberRepo: MemberRepo,
     private val passwordEncoder: PasswordEncoder,
+    private val memberSignupAuthTokenProvider: MemberSignupAuthTokenProvider,
 ) {
     @Operation(summary = "멤버 회원가입")
-    @ApiResponse(responseCode = "200")
     @ApiExceptions(
         AlreadyExistsMemberException::class,
+        MemberSignupEmailTokenInvalidException::class,
+        AlreadyExistsMemberNicknameException::class,
     )
     @PostMapping("/members/signup")
     fun signup(
         @RequestBody @Valid req: MemberSignupRequest
     ): CustomResponseEntity<UUID> {
-        // TODO: EmailAuthToken 검증
+        // EmailAuthToken 검증
+        memberSignupAuthTokenProvider
+            .parseEmailOrThrow(req.emailAuthToken)
+            .let { parsedEmail ->
+                if (parsedEmail != req.email) {
+                    throw MemberSignupEmailTokenInvalidException()
+                }
+            }
+
 
         // 이미 가입된 회원인지 확인
         memberRepo.run {
@@ -79,7 +91,7 @@ class MemberSignupController(
                 throw AlreadyExistsMemberException()
             }
             findByProfileNickname(req.nickname)?.let {
-                throw AlreadyExistsMemberException()
+                throw AlreadyExistsMemberNicknameException()
             }
         }
 

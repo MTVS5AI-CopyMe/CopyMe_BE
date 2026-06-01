@@ -2,7 +2,7 @@ package com.copymebe.copyme.core.domain.member.auth.models
 
 import com.copymebe.copyme.core.domain.base.BaseEntity
 import com.copymebe.copyme.core.domain.member.auth.MaxSignupAuthRequestExceededException
-import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthCodeExpiredException
+import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthCodeInvalidException
 import jakarta.persistence.*
 
 @Entity
@@ -55,22 +55,15 @@ class MemberSignupAuthenticationManager protected constructor(
      * 인증
      */
     fun authenticateOrThrow(authCode: String) {
-        try {
-            requests
-                .find { it.authCode == authCode }
-                ?.let { request ->
-                    // 인증요청이 만료되었다면 throw
-                    if (request.isExpired()) {
-                        throw MemberSignupAuthCodeExpiredException()
-                    }
+        initExpiredRequests()
 
-                    // 인증완료시 모든 인증요청 제거
-                    requests.clear()
-                }
-                ?: throw MemberSignupAuthCodeExpiredException()
-        } finally {
-            initExpiredRequests()
-        }
+        requests
+            .find { (it.authCode == authCode) and it.isExpired().not() }
+            ?.let {
+                // 인증완료시 모든 인증요청 제거
+                requests.clear()
+            }
+            ?: throw MemberSignupAuthCodeInvalidException()
     }
 
     /**
