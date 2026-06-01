@@ -4,7 +4,6 @@ import com.copymebe.copyme.core.domain.auth.MaxSignupAuthRequestExceededExceptio
 import com.copymebe.copyme.core.domain.auth.SignupAuthCodeExpiredException
 import com.copymebe.copyme.core.domain.base.BaseEntity
 import jakarta.persistence.*
-import java.util.*
 
 @Entity
 @Table(name = "signup_authentication_manager")
@@ -37,7 +36,7 @@ class SignupAuthenticationManager protected constructor(
     fun addRequestOrThrow(
     ): SignupAuthenticationManagerRequest {
         // 만료된 인증요청 제거
-        initRequests()
+        initExpiredRequests()
 
         // 최대 인증요청 수 초과 체크
         if (requests.size >= MAX_REQUEST_COUNT) {
@@ -53,17 +52,10 @@ class SignupAuthenticationManager protected constructor(
     }
 
     /**
-     * 인증요청 제거
-     */
-    fun removeRequest(requestId: UUID) {
-        requests.removeIf { it.id == requestId }
-    }
-
-    /**
      * 인증
      */
-    fun authenticate(authCode: String): Boolean {
-        return try {
+    fun authenticateOrThrow(authCode: String) {
+        try {
             requests
                 .find { it.authCode == authCode }
                 ?.let { request ->
@@ -72,20 +64,19 @@ class SignupAuthenticationManager protected constructor(
                         throw SignupAuthCodeExpiredException()
                     }
 
-                    // 인증완료시 해당 요청 제거
-                    removeRequest(request.id)
-                    true
+                    // 인증완료시 모든 인증요청 제거
+                    requests.clear()
                 }
-                ?: false
+                ?: throw SignupAuthCodeExpiredException()
         } finally {
-            initRequests()
+            initExpiredRequests()
         }
     }
 
     /**
      * 만료된 인증요청 초기화
      */
-    fun initRequests() {
+    fun initExpiredRequests() {
         requests.removeIf { it.isExpired() }
     }
 }

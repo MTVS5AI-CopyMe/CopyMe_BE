@@ -13,6 +13,7 @@ object SecurityPaths {
         "/v3/api-docs/**",
         //
         "/members/signup/authcode",
+        "/members/signup/authcode-validate",
         // "/signin",
     )
 }
