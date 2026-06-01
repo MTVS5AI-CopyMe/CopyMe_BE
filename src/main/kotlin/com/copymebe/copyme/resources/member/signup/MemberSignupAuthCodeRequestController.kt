@@ -8,6 +8,7 @@ import com.copymebe.copyme.core.domain.member.MemberRepo
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController
 
 data class MemberSignupAuthCodeRequest(
     @field:Email
+    @Schema(
+        description = "이메일",
+        example = "user@example.com"
+    )
     val email: String,
 )
 

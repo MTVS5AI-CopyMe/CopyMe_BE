@@ -12,8 +12,7 @@ object SecurityPaths {
         "/swagger-ui/**",
         "/v3/api-docs/**",
         //
-        "/members/signup/authcode",
-        "/members/signup/authcode-validate",
+        "/members/signup/**",
         // "/signin",
     )
 }
