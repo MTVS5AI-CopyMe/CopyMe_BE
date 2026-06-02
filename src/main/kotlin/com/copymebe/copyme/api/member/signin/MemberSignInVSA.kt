@@ -73,7 +73,7 @@ class MemberSignInVSA(
         InvalidMemberCredentialException::class,
     )
     @PostMapping("/members/signin")
-    fun signup(
+    fun signIn(
         @RequestBody @Valid req: MemberSignInRequest,
     ): CustomResponseEntity<MemberSignInResponse> {
         val member = memberRepo.findByEmail(req.email)
