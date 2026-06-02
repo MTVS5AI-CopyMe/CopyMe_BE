@@ -7,7 +7,7 @@ import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberNickname
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.domain.member.member.models.Member
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
-import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
+import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -66,7 +66,7 @@ class MemberSignupController(
     private val memberSignupAuthTokenProvider: MemberSignupAuthTokenProvider,
 ) {
     @Operation(summary = "멤버 회원가입")
-    @ApiExceptions(
+    @CustomApiExceptions(
         AlreadyExistsMemberException::class,
         MemberSignupEmailTokenInvalidException::class,
         AlreadyExistsMemberNicknameException::class,

@@ -5,7 +5,7 @@ import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthenticationMan
 import com.copymebe.copyme.core.domain.member.auth.models.MemberSignupAuthenticationManager
 import com.copymebe.copyme.core.domain.member.auth.services.MemberSignupAuthTokenProvider
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
-import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
+import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -39,7 +39,7 @@ class MemberSignupAuthCodeValidateController(
     private val memberSignupAuthTokenProvider: MemberSignupAuthTokenProvider,
 ) {
     @Operation(summary = "멤버 회원가입 인증코드 검증")
-    @ApiExceptions(
+    @CustomApiExceptions(
         MemberSignupAuthCodeInvalidException::class,
     )
     @PostMapping("/members/signup/authcode-validate")

@@ -6,7 +6,7 @@ import com.copymebe.copyme.core.domain.member.auth.models.MemberSignupAuthentica
 import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
-import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
+import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -32,7 +32,7 @@ class MemberSignupAuthCodeRequestController(
     private val memberSignupAuthenticationManagerRepo: MemberSignupAuthenticationManagerRepo,
 ) {
     @Operation(summary = "멤버 회원가입 인증코드 요청")
-    @ApiExceptions(
+    @CustomApiExceptions(
         AlreadyExistsMemberException::class,
         MaxSignupAuthRequestExceededException::class,
     )

@@ -13,9 +13,13 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import kotlin.reflect.full.companionObjectInstance
 
+object SwaggerSecurityConst {
+    const val BEARER_AUTH = "Bearer Authentication"
+}
+
 @Configuration
 @SecurityScheme(
-    name = "Bearer Authentication",
+    name = SwaggerSecurityConst.BEARER_AUTH,
     type = SecuritySchemeType.HTTP,
     scheme = "bearer",
     bearerFormat = "JWT"
@@ -25,7 +29,7 @@ class SwaggerConfig {
     fun apiExceptionsCustomizer(): OperationCustomizer {
         return OperationCustomizer { operation, handlerMethod ->
             val annotation =
-                handlerMethod.getMethodAnnotation(ApiExceptions::class.java)
+                handlerMethod.getMethodAnnotation(CustomApiExceptions::class.java)
                     ?: return@OperationCustomizer operation
 
             annotation.value
@@ -40,10 +44,12 @@ class SwaggerConfig {
                         // 이미 Swagger가 만든 응답이 있으면 가져오고 없으면 새로 생성
                         operation.responses[responseCode] ?: ApiResponse()
                     }.apply {
+                        // Description에 에러 코드들 명시
                         description = exceptions.joinToString("\n") {
                             "- ${it.DESCRIPTION}"
                         }
 
+                        // Content에 공통 에러 바디 명시
                         content = Content().addMediaType(
                             "application/json",
                             MediaType().schema(

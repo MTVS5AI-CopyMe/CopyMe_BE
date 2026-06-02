@@ -27,7 +27,7 @@ class SecurityJwtAuthenticationFilter(
         message = "UNAUTHORIZED"
     )
 
-    private val expiredAccessTokenException = ExpiredAccessTokenException()
+    private val expiredSecurityTokenException = ExpiredSecurityTokenException()
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         return SecurityPaths.PUBLIC_PATHS.any {
@@ -53,7 +53,7 @@ class SecurityJwtAuthenticationFilter(
             // 만료된 토큰인 경우
             sendErrorResponse(
                 response = response,
-                exception = expiredAccessTokenException
+                exception = expiredSecurityTokenException
             )
         } catch (_: Exception) {
             sendErrorResponse(

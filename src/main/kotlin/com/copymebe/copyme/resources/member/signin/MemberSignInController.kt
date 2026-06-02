@@ -4,7 +4,7 @@ import com.copymebe.copyme.core.domain.member.auth.InvalidMemberCredentialExcept
 import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
-import com.copymebe.copyme.core.global.http.swagger.ApiExceptions
+import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import com.copymebe.copyme.core.global.security.SecurityJwtTokenProvider
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
@@ -60,7 +60,7 @@ data class MemberSignInResponse(
     val refreshToken: String,
 )
 
-@Tag(name = "Member Signin")
+@Tag(name = "Member SignIn")
 @RestController
 class MemberSignInController(
     private val memberRepo: MemberRepo,
@@ -68,7 +68,7 @@ class MemberSignInController(
     private val securityJwtTokenProvider: SecurityJwtTokenProvider,
 ) {
     @Operation(summary = "멤버 로그인")
-    @ApiExceptions(
+    @CustomApiExceptions(
         AlreadyExistsMemberException::class,
         InvalidMemberCredentialException::class,
     )
@@ -90,24 +90,10 @@ class MemberSignInController(
             }
 
         // 토큰 그룹 발급
-        val (accessToken, refreshToken) = UsernamePasswordAuthenticationToken(
-            member.email,
-            ""
-        ).let { authentication ->
-            val memberId = member.id.toString()
-
-            val accessToken = securityJwtTokenProvider.createAccessToken(
-                authentication = authentication,
-                userId = memberId,
-            )
-
-            val refreshToken = securityJwtTokenProvider.createRefreshToken(
-                authentication = authentication,
-                userId = memberId,
-            )
-
-            Pair(accessToken, refreshToken)
-        }
+        val (accessToken, refreshToken) = generateTokenGroup(
+            memberId = member.id.toString(),
+            memberEmail = member.email
+        )
 
         // 디바이스 정보 덮어쓰기
         member.upsertDevice(
@@ -126,5 +112,30 @@ class MemberSignInController(
                 refreshToken = refreshToken
             )
         )
+    }
+
+    /**
+     * 토큰 그룹 발급
+     */
+    private fun generateTokenGroup(
+        memberId: String,
+        memberEmail: String
+    ): Pair<String, String> {
+        return UsernamePasswordAuthenticationToken(
+            memberEmail,
+            ""
+        ).let { authentication ->
+            val accessToken = securityJwtTokenProvider.createAccessToken(
+                authentication = authentication,
+                userId = memberId,
+            )
+
+            val refreshToken = securityJwtTokenProvider.createRefreshToken(
+                authentication = authentication,
+                userId = memberId,
+            )
+
+            Pair(accessToken, refreshToken)
+        }
     }
 }

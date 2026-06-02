@@ -55,3 +55,16 @@ class InvalidMemberCredentialException : BaseException(
         override val HTTP_STATUS = HttpStatus.UNAUTHORIZED
     }
 }
+
+class MemberRefreshTokenExpiredException : BaseException(
+    code = CODE,
+    status = HTTP_STATUS,
+    message = MESSAGE,
+) {
+    companion object : ExceptionMetadata {
+        override val CODE = "EXPIRED_REFRESH_TOKEN"
+        override val MESSAGE = "리프레쉬 토큰 만료"
+        override val DESCRIPTION = "$CODE: $MESSAGE"
+        override val HTTP_STATUS = HttpStatus.UNAUTHORIZED
+    }
+}
