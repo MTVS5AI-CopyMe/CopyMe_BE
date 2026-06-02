@@ -1,4 +1,4 @@
-package com.copymebe.copyme.resources.member.member
+package com.copymebe.copyme.api.member.member
 
 import com.copymebe.copyme.core.domain.member.auth.MemberRefreshTokenExpiredException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
@@ -27,7 +27,7 @@ data class MemberRefreshTokenResponse(
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Member")
 @RestController
-class MemberRefreshTokenController(
+class MemberRefreshTokenVSA(
     private val memberRepo: MemberRepo,
     private val securityJwtTokenProvider: SecurityJwtTokenProvider
 ) {

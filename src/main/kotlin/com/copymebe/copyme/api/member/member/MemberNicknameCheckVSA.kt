@@ -1,4 +1,4 @@
-package com.copymebe.copyme.resources.member.member
+package com.copymebe.copyme.api.member.member
 
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
@@ -21,7 +21,7 @@ data class MemberNicknameCheckRequest(
 
 @Tag(name = "Member")
 @RestController
-class MemberNicknameCheckController(
+class MemberNicknameCheckVSA(
     private val memberRepo: MemberRepo,
 ) {
     @Operation(summary = "멤버 닉네임 중복검사")

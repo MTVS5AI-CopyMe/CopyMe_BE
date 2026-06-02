@@ -1,4 +1,4 @@
-package com.copymebe.copyme.resources.health
+package com.copymebe.copyme.api.health
 
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

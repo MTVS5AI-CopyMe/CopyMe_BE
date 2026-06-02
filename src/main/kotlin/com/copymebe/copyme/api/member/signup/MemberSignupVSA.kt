@@ -1,4 +1,4 @@
-package com.copymebe.copyme.resources.member.signup
+package com.copymebe.copyme.api.member.signup
 
 import com.copymebe.copyme.core.domain.member.auth.MemberSignupEmailTokenInvalidException
 import com.copymebe.copyme.core.domain.member.auth.services.MemberSignupAuthTokenProvider
@@ -60,7 +60,7 @@ data class MemberSignupRequest(
 
 @Tag(name = "Member Signup")
 @RestController
-class MemberSignupController(
+class MemberSignupVSA(
     private val memberRepo: MemberRepo,
     private val passwordEncoder: PasswordEncoder,
     private val memberSignupAuthTokenProvider: MemberSignupAuthTokenProvider,

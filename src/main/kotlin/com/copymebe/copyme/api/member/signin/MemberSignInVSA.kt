@@ -1,4 +1,4 @@
-package com.copymebe.copyme.resources.member.signin
+package com.copymebe.copyme.api.member.signin
 
 import com.copymebe.copyme.core.domain.member.auth.InvalidMemberCredentialException
 import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
@@ -62,7 +62,7 @@ data class MemberSignInResponse(
 
 @Tag(name = "Member SignIn")
 @RestController
-class MemberSignInController(
+class MemberSignInVSA(
     private val memberRepo: MemberRepo,
     private val passwordEncoder: PasswordEncoder,
     private val securityJwtTokenProvider: SecurityJwtTokenProvider,
