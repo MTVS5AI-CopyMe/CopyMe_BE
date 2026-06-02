@@ -41,7 +41,7 @@ class SecurityJwtAuthenticationFilter(
         filterChain: FilterChain
     ) {
         try {
-            resolveToken(request)
+            request.resolveToken()
                 ?.takeIf(jwtTokenProvider::validateTokenOrThrow)
                 ?.let(jwtTokenProvider::getAuthentication)
                 ?.let { authentication ->
@@ -51,47 +51,47 @@ class SecurityJwtAuthenticationFilter(
             filterChain.doFilter(request, response)
         } catch (_: ExpiredJwtException) {
             // 만료된 토큰인 경우
-            sendErrorResponse(
-                response = response,
+            response.writeErrorResponse(
+                objectMapper = objectMapper,
                 exception = expiredSecurityTokenException
             )
         } catch (_: Exception) {
-            sendErrorResponse(
-                response = response,
+            // 만료된 토큰인 경우
+            response.writeErrorResponse(
+                objectMapper = objectMapper,
                 exception = defaultAuthException
             )
         }
     }
+}
 
-    /**
-     * 헤더에서 토큰 분리
-     */
-    private fun resolveToken(request: HttpServletRequest): String? {
-        return request
-            .getHeader("Authorization")
-            ?.substringAfter("Bearer ")
+/**
+ * 헤더에서 토큰 분리
+ */
+private fun HttpServletRequest.resolveToken(): String? {
+    return this.getHeader("Authorization")
+        ?.substringAfter("Bearer ")
+}
+
+/**
+ * 에러 응답으로 rewrite
+ */
+private fun HttpServletResponse.writeErrorResponse(
+    objectMapper: ObjectMapper,
+    exception: BaseException,
+) {
+    // Response Metadata 설정
+    this.apply {
+        status = exception.status.value()
+        contentType = MediaType.APPLICATION_JSON_VALUE
+        characterEncoding = "UTF-8"
     }
 
-    /**
-     * 에러 응답으로 rewrite
-     */
-    private fun sendErrorResponse(
-        response: HttpServletResponse,
-        exception: BaseException,
-    ) {
-        // Response Metadata 설정
-        response.apply {
-            status = exception.status.value()
-            contentType = MediaType.APPLICATION_JSON_VALUE
-            characterEncoding = "UTF-8"
-        }
-
-        // Response Body 설정
-        CustomResponseEntity(
-            code = exception.code,
-            message = exception.message,
-            data = null
-        ).let(objectMapper::writeValueAsString)
-            .let(response.writer::write)
-    }
+    // Response Body 설정
+    CustomResponseEntity(
+        code = exception.code,
+        message = exception.message,
+        data = null
+    ).let(objectMapper::writeValueAsString)
+        .let(this.writer::write)
 }
