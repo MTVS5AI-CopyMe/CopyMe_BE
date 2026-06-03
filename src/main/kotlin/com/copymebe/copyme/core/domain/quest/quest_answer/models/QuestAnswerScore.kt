@@ -8,7 +8,7 @@ import jakarta.persistence.Enumerated
 @Embeddable
 class QuestAnswerScore protected constructor(
     @Column(name = "score", nullable = false)
-    var score: Float,
+    var score: Int,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "score_grade", nullable = false)
@@ -16,12 +16,12 @@ class QuestAnswerScore protected constructor(
 ) {
     companion object {
         fun create(
-            score: Float,
-            scoreGrade: QuestAnswerScoreGrade
+            score: Int,
         ): QuestAnswerScore {
+
             return QuestAnswerScore(
                 score = score,
-                scoreGrade = scoreGrade
+                scoreGrade = QuestAnswerScoreGrade.fromScore(score),
             )
         }
     }

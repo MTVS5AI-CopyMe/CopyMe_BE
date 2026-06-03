@@ -13,6 +13,9 @@ class QuestAnswer protected constructor(
     @Column(name = "member_id", nullable = false)
     val memberId: UUID,
 
+    @Column(name = "quest_image_id", nullable = false)
+    val questImageId: UUID,
+
     @Column(name = "answer_image_url", nullable = false)
     var answerImageUrl: String,
 
@@ -22,13 +25,15 @@ class QuestAnswer protected constructor(
     companion object {
         fun create(
             memberId: UUID,
+            questImageId: UUID,
             answerImageUrl: String,
-            score: QuestAnswerScore
+            score: Int
         ): QuestAnswer {
             return QuestAnswer(
                 memberId = memberId,
+                questImageId = questImageId,
                 answerImageUrl = answerImageUrl,
-                score = score
+                score = QuestAnswerScore.create(score)
             )
         }
     }
