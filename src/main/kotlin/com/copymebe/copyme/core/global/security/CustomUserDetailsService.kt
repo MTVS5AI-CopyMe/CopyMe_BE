@@ -14,7 +14,7 @@ class CustomUserDetailsService(
     private val memberRepo: MemberRepo
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
-        val member = memberRepo.findByEmail(username)
+        val member = memberRepo.findByEmailAndDeletedAtNull(username)
             ?: throw NotFoundMemberException()
 
         val roles = listOf(object : GrantedAuthority {

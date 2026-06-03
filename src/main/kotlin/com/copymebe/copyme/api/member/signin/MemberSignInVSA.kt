@@ -1,8 +1,8 @@
 package com.copymebe.copyme.api.member.signin
 
 import com.copymebe.copyme.core.domain.member.auth.InvalidMemberCredentialException
-import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
+import com.copymebe.copyme.core.domain.member.member.NotFoundMemberException
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import com.copymebe.copyme.core.global.security.SecurityJwtTokenProvider
@@ -69,15 +69,15 @@ class MemberSignInVSA(
 ) {
     @Operation(summary = "멤버 로그인")
     @CustomApiExceptions(
-        AlreadyExistsMemberException::class,
+        NotFoundMemberException::class,
         InvalidMemberCredentialException::class,
     )
     @PostMapping("/members/signin")
     fun signIn(
         @RequestBody @Valid req: MemberSignInRequest,
     ): CustomResponseEntity<MemberSignInResponse> {
-        val member = memberRepo.findByEmail(req.email)
-            ?: throw AlreadyExistsMemberException()
+        val member = memberRepo.findByEmailAndDeletedAtNull(req.email)
+            ?: throw NotFoundMemberException()
 
         // 비밀번호 일치 확인
         passwordEncoder

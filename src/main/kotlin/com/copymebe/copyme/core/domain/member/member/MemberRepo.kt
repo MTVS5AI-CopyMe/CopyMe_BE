@@ -6,6 +6,7 @@ import java.util.*
 
 interface MemberRepo : JpaRepository<Member, UUID> {
     fun findByEmail(email: String): Member?
+    fun findByEmailAndDeletedAtNull(email: String): Member?
     fun findByProfileNickname(nickname: String): Member?
 
     fun findByDevicesRefreshToken(refreshToken: String): Member?
