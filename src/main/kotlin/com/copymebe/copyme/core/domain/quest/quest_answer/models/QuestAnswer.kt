@@ -37,4 +37,8 @@ class QuestAnswer protected constructor(
             )
         }
     }
+
+    fun isOwner(memberId: UUID): Boolean {
+        return this.memberId == memberId
+    }
 }

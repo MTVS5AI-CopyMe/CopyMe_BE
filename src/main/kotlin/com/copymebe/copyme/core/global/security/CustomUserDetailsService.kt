@@ -25,7 +25,7 @@ class CustomUserDetailsService(
 
         return User(
             member.email,
-            member.password,
+            "",
             roles
         )
     }
