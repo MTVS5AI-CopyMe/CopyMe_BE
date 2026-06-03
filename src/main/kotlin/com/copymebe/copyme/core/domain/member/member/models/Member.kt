@@ -23,6 +23,8 @@ class Member protected constructor(
     val devices: MutableList<MemberDeviceInfo> = mutableListOf(),
 ) : BaseEntity() {
     companion object {
+        const val PASSWORD_REGEX = "((?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,20})"
+
         fun create(
             email: String,
             password: String,

@@ -1,10 +1,8 @@
 package com.copymebe.copyme.core.domain.quest.quest_answer.models
 
 import com.copymebe.copyme.core.domain.base.BaseEntity
-import jakarta.persistence.Column
-import jakarta.persistence.Embedded
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import com.copymebe.copyme.core.domain.quest.quest_image.models.QuestImage
+import jakarta.persistence.*
 import java.util.*
 
 @Entity
@@ -13,8 +11,9 @@ class QuestAnswer protected constructor(
     @Column(name = "member_id", nullable = false)
     val memberId: UUID,
 
-    @Column(name = "quest_image_id", nullable = false)
-    val questImageId: UUID,
+    @ManyToOne
+    @JoinColumn(name = "quest_image_id", nullable = false)
+    val questImage: QuestImage,
 
     @Column(name = "answer_image_url", nullable = false)
     var answerImageUrl: String,
@@ -25,13 +24,13 @@ class QuestAnswer protected constructor(
     companion object {
         fun create(
             memberId: UUID,
-            questImageId: UUID,
+            questImage: QuestImage,
             answerImageUrl: String,
             score: Int
         ): QuestAnswer {
             return QuestAnswer(
                 memberId = memberId,
-                questImageId = questImageId,
+                questImage = questImage,
                 answerImageUrl = answerImageUrl,
                 score = QuestAnswerScore.create(score)
             )

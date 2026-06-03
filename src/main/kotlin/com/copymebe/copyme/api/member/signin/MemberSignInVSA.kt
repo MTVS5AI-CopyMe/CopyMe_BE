@@ -3,6 +3,7 @@ package com.copymebe.copyme.api.member.signin
 import com.copymebe.copyme.core.domain.member.auth.InvalidMemberCredentialException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.domain.member.member.NotFoundMemberException
+import com.copymebe.copyme.core.domain.member.member.models.Member
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import com.copymebe.copyme.core.global.security.SecurityJwtTokenProvider
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.Pattern
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,36 +22,40 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 data class MemberSignInRequest(
-    @field:Email
     @Schema(
         description = "이메일",
         example = "user@example.com"
     )
+    @field:Email
     val email: String,
 
-    @field:NotEmpty
     @Schema(
         description = "비밀번호",
         example = "asdasd123!!"
     )
+    @field:NotEmpty
+    @field:Pattern(
+        regexp = Member.PASSWORD_REGEX,
+        message = "영문 대소문자, 숫자, 특수문자(@$!%*?&) 각 1개 이상 포함하는 8~20자"
+    )
     val password: String,
 
-    @field:NotEmpty
     @Schema(
         description = "접속 디바이스 ID",
         example = "019e8222-f598-7910-9c48-9f138def99fc"
     )
+    @field:NotEmpty
     val deviceUid: String,
 
-    @field:NotEmpty
     @Schema(
         description = "FCM 토큰 (푸시알림 토큰)",
         example = "019e8222-f598-7910-9c48-9f138def99fc"
     )
+    @field:NotEmpty
     val fcmToken: String,
 )
 
-data class MemberSignInResponse(
+data class MemberSignInDto(
     @Schema(description = "Member ID")
     val memberId: UUID,
 
@@ -75,7 +81,7 @@ class MemberSignInVSA(
     @PostMapping("/api/v1/members/signin")
     fun signIn(
         @RequestBody @Valid req: MemberSignInRequest,
-    ): CustomResponseEntity<MemberSignInResponse> {
+    ): CustomResponseEntity<MemberSignInDto> {
         val member = memberRepo.findByEmailAndDeletedAtNull(req.email)
             ?: throw NotFoundMemberException()
 
@@ -106,7 +112,7 @@ class MemberSignInVSA(
         memberRepo.save(member)
 
         return CustomResponseEntity(
-            data = MemberSignInResponse(
+            data = MemberSignInDto(
                 memberId = member.id,
                 accessToken = accessToken,
                 refreshToken = refreshToken

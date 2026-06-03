@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 data class MemberNicknameCheckRequest(
-    @field:NotEmpty
     @Schema(
         description = "닉네임",
         example = "asd"
     )
+    @field:NotEmpty
     val nickname: String
 )
 

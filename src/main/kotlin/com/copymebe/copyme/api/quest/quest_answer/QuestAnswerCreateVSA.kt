@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import jakarta.validation.constraints.NotEmpty
+import org.hibernate.validator.constraints.URL
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,12 +26,14 @@ data class QuestAnswerCreateRequest(
         description = "퀘스트 이미지 ID",
         example = "019e8d4b-e50b-7c38-b4f1-382ec3e7cc7d"
     )
+    @field:NotEmpty
     val questImageId: UUID,
 
     @Schema(
         description = "응답 이미지",
         example = "https://picsum.photos/seed/picsum/200/300"
     )
+    @field:URL
     val answerImageUrl: String,
 )
 
@@ -58,7 +62,7 @@ class QuestAnswerCreateVSA(
         // 응답 생성
         val questAnswer = QuestAnswer.create(
             memberId = userId,
-            questImageId = questImage.id,
+            questImage = questImage,
             answerImageUrl = req.answerImageUrl,
             score = score,
         )

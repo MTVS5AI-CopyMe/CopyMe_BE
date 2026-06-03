@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.constraints.NotEmpty
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController
 
 data class MemberRefreshTokenResponse(
     @Schema(description = "Access Token")
+    @field:NotEmpty
     val accessToken: String,
 
     @Schema(description = "Refresh Token")
+    @field:NotEmpty
     val refreshToken: String,
 )
 

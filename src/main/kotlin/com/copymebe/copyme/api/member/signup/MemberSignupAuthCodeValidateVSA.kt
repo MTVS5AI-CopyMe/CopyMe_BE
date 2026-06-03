@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 data class MemberSignupAuthCodeValidateRequest(
-    @field:Email
     @Schema(
         description = "이메일",
         example = "user@example.com"
     )
+    @field:Email
     val email: String,
 
-    @field:NotEmpty
     @Schema(
         description = "이메일 인증토큰",
         example = "asd123"
     )
+    @field:NotEmpty
     val authCode: String,
 )
 

@@ -49,14 +49,15 @@ class SecurityJwtAuthenticationFilter(
                 }
 
             filterChain.doFilter(request, response)
-        } catch (_: ExpiredJwtException) {
+        } catch (e: ExpiredJwtException) {
+            println(e)
             // 만료된 토큰인 경우
             response.writeErrorResponse(
                 objectMapper = objectMapper,
                 exception = expiredSecurityTokenException
             )
-        } catch (_: Exception) {
-            // 만료된 토큰인 경우
+        } catch (e: Exception) {
+            println(e)
             response.writeErrorResponse(
                 objectMapper = objectMapper,
                 exception = defaultAuthException

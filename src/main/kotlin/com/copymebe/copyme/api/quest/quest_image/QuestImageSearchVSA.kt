@@ -1,7 +1,7 @@
 package com.copymebe.copyme.api.quest.quest_image
 
+import com.copymebe.copyme.api.quest.quest_image.dto.QuestImageDto
 import com.copymebe.copyme.core.domain.quest.quest_image.QuestImageRepo
-import com.copymebe.copyme.core.domain.quest.quest_image.models.QuestImage
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.SwaggerSecurityConst
 import com.copymebe.copyme.core.global.pagination.OffsetPage
@@ -30,10 +30,11 @@ class QuestImageSearchVSA(
 ) {
     @Operation(summary = "퀘스트 이미지 검색")
     @GetMapping("/api/v1/quest-images")
-    fun search(@Valid req: QuestImageSearchRequest): CustomResponseEntity<OffsetPage<List<QuestImage>>> {
+    fun search(@Valid req: QuestImageSearchRequest): CustomResponseEntity<OffsetPage<List<QuestImageDto>>> {
         val pageable = PageRequest.of(req.page, req.size)
 
         val r = questImageRepo.findAll(pageable)
+            .map(QuestImageDto::fromEntity)
             .let { OffsetPage.create(it) }
 
         return CustomResponseEntity(data = r)

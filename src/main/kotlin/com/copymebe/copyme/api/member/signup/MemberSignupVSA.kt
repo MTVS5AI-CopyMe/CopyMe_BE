@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.Size
 import org.hibernate.validator.constraints.URL
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 data class MemberSignupRequest(
-    @field:Email
     @Schema(
         description = "이메일",
         example = "user@example.com"
     )
+    @field:Email
     val email: String,
 
     @field:NotEmpty
@@ -36,25 +37,26 @@ data class MemberSignupRequest(
     )
     val password: String,
 
-    @field:URL
     @Schema(
         description = "프로필 이미지 URL",
         example = "https://picsum.photos/seed/picsum/200/300"
     )
+    @field:URL
     val profileImageUrl: String,
 
-    @field:NotEmpty
     @Schema(
         description = "닉네임",
         example = "asd"
     )
+    @field:NotEmpty
+    @field:Size(min = 1, max = 12)
     val nickname: String,
 
-    @field:NotEmpty
     @Schema(
         description = "이메일 인증토큰",
         example = "asd123"
     )
+    @field:NotEmpty
     val emailAuthToken: String,
 )
 

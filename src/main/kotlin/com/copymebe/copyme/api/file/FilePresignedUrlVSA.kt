@@ -12,25 +12,25 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 data class FilePresignedUrlRequest(
+    @Schema(
+        description = "파일 키 (확장자 포함)",
+        example = "test.png"
+    )
     @field:NotBlank(message = "파일 키는 필수 입력 항목입니다.")
     @field:Pattern(
         regexp = "^[^/\\s]+\\.[^/\\s]+$",
         message = "파일 키 형식이 올바르지 않습니다. (예: filename.ext)"
     )
-    @Schema(
-        description = "파일 키 (확장자 포함)",
-        example = "test.png"
-    )
     val fileKey: String,
 
+    @Schema(
+        description = "MIME 타입",
+        example = "image/png"
+    )
     @field:NotBlank(message = "MIME 타입은 필수 입력 항목입니다.")
     @field:Pattern(
         regexp = "^[^/\\s]+/[^/\\s]+$",
         message = "MIME 타입 형식이 올바르지 않습니다. (예: image/png)"
-    )
-    @Schema(
-        description = "MIME 타입",
-        example = "image/png"
     )
     val contentType: String
 )
