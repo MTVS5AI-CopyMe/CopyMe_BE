@@ -36,7 +36,7 @@ class MemberSignupAuthCodeRequestVSA(
         AlreadyExistsMemberException::class,
         MaxSignupAuthRequestExceededException::class,
     )
-    @PostMapping("/members/signup/authcode")
+    @PostMapping("/api/v1/members/signup/authcode")
     fun requestSignupAuthCode(
         @RequestBody @Valid req: MemberSignupAuthCodeRequest
     ): CustomResponseEntity<Boolean> {

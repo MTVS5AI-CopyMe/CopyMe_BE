@@ -29,7 +29,7 @@ class QuestImageSearchVSA(
     private val questImageRepo: QuestImageRepo
 ) {
     @Operation(summary = "퀘스트 이미지 검색")
-    @GetMapping("/quest-images")
+    @GetMapping("/api/v1/quest-images")
     fun search(@Valid req: QuestImageSearchRequest): CustomResponseEntity<OffsetPage<List<QuestImage>>> {
         val pageable = PageRequest.of(req.page, req.size)
 

@@ -37,7 +37,7 @@ class QuestAnswerSearchVSA(
     private val questAnswerRepo: QuestAnswerRepo
 ) {
     @Operation(summary = "퀘스트 응답 검색")
-    @GetMapping("/quest-answers")
+    @GetMapping("/api/v1/quest-answers")
     fun search(@Valid req: QuestAnswerSearchRequest): CustomResponseEntity<OffsetPage<List<QuestAnswer>>> {
         val pageable = PageRequest.of(req.page, req.size)
 

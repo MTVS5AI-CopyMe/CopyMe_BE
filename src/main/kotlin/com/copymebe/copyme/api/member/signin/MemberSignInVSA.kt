@@ -72,7 +72,7 @@ class MemberSignInVSA(
         NotFoundMemberException::class,
         InvalidMemberCredentialException::class,
     )
-    @PostMapping("/members/signin")
+    @PostMapping("/api/v1/members/signin")
     fun signIn(
         @RequestBody @Valid req: MemberSignInRequest,
     ): CustomResponseEntity<MemberSignInResponse> {

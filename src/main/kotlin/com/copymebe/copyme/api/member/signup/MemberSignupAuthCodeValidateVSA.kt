@@ -42,7 +42,7 @@ class MemberSignupAuthCodeValidateVSA(
     @CustomApiExceptions(
         MemberSignupAuthCodeInvalidException::class,
     )
-    @PostMapping("/members/signup/authcode-validate")
+    @PostMapping("/api/v1/members/signup/authcode-validate")
     fun validateSignupAuthCode(
         @RequestBody @Valid req: MemberSignupAuthCodeValidateRequest
     ): CustomResponseEntity<String> {

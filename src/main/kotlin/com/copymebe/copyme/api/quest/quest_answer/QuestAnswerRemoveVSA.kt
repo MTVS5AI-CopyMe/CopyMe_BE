@@ -24,7 +24,7 @@ class QuestAnswerRemoveVSA(
     private val questAnswerRepo: QuestAnswerRepo
 ) {
     @Operation(summary = "퀘스트 응답 삭제")
-    @DeleteMapping("/quest-answers/{questId}")
+    @DeleteMapping("/api/v1/quest-answers/{questId}")
     fun remove(
         authentication: Authentication,
         @PathVariable("questId") questId: UUID,

@@ -71,7 +71,7 @@ class MemberSignupVSA(
         MemberSignupEmailTokenInvalidException::class,
         AlreadyExistsMemberNicknameException::class,
     )
-    @PostMapping("/members/signup")
+    @PostMapping("/api/v1/members/signup")
     fun signup(
         @RequestBody @Valid req: MemberSignupRequest
     ): CustomResponseEntity<UUID> {

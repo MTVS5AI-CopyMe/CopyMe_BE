@@ -41,7 +41,7 @@ class QuestAnswerCreateVSA(
     private val questAnswerRepo: QuestAnswerRepo
 ) {
     @Operation(summary = "퀘스트 응답 생성")
-    @PostMapping("/quest-answers")
+    @PostMapping("/api/v1/quest-answers")
     fun create(
         authentication: Authentication,
         @RequestBody @Valid req: QuestAnswerCreateRequest

@@ -35,7 +35,7 @@ class MemberRefreshTokenVSA(
     @CustomApiExceptions(
         MemberRefreshTokenExpiredException::class
     )
-    @PostMapping("/members/refresh-token")
+    @PostMapping("/api/v1/members/refresh-token")
     fun refreshToken(
         authentication: Authentication
     ): CustomResponseEntity<MemberRefreshTokenResponse> {

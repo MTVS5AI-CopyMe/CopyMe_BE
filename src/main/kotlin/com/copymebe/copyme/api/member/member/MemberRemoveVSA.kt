@@ -25,7 +25,7 @@ class MemberRemoveVSA(
     @CustomApiExceptions(
         NotFoundMemberException::class
     )
-    @DeleteMapping("/members/me")
+    @DeleteMapping("/api/v1/members/me")
     fun remove(
         authentication: Authentication
     ): CustomResponseEntity<UUID> {

@@ -25,7 +25,7 @@ class MemberNicknameCheckVSA(
     private val memberRepo: MemberRepo,
 ) {
     @Operation(summary = "멤버 닉네임 중복검사")
-    @GetMapping("/members/nickname-check")
+    @GetMapping("/api/v1/members/nickname-check")
     fun checkNickname(@Valid req: MemberNicknameCheckRequest): CustomResponseEntity<Boolean> {
         val isValidNickname = memberRepo.findByProfileNickname(req.nickname) == null
 
