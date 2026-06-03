@@ -12,9 +12,10 @@ object SecurityPaths {
         "/swagger-ui/**",
         "/v3/api-docs/**",
         //
-        "/members/signup/**",
-        "/members/signin/**",
-        "/members/nickname-check"
+        "/api/v1/members/signup/**",
+        "/api/v1/members/signin/**",
+        "/api/v1/members/nickname-check",
+        "/api/v1/files/presigned-url",
         // "/signin",
     )
 }
