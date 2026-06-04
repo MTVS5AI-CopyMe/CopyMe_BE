@@ -54,6 +54,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     // AWS
     implementation("software.amazon.awssdk:s3:2.46.1")
+    // NanoID
+    implementation("com.aventrix.jnanoid:jnanoid:2.0.0")
     // ETC
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

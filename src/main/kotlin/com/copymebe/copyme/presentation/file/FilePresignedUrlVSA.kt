@@ -38,7 +38,10 @@ data class FilePresignedUrlResponse(
 class FilePresignedUrlVSA(
     private val presignedUrlService: PresignedUrlService
 ) {
-    @Operation(summary = "Presigned Url 발급")
+    @Operation(
+        summary = "Presigned Url 발급",
+        description = "서버에서 'NanoId-파일명' 형식으로 변형.\n\n프론트에서 파일명 유니크 신경 안 써도 됨."
+    )
     @PostMapping("/api/v1/files/presigned-url")
     fun generatePresignedUrl(
         @RequestBody @Valid req: FilePresignedUrlRequest

@@ -1,5 +1,6 @@
 package com.copymebe.copyme.core.global.file_storage
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
@@ -19,9 +20,15 @@ class PresignedUrlService(
     fun createPresignedUrl(
         fileKey: String,
     ): Pair<String, String> {
+        val newFileKey = run {
+            val path = "members/quest-answers/"
+            val nanoId = NanoIdUtils.randomNanoId()
+            "${path}${nanoId}-${fileKey}"
+        }
+
         val putObjectRequest = PutObjectRequest.builder()
             .bucket(bucketName)
-            .key(fileKey)
+            .key(newFileKey)
             .build()
 
         val putObjectPresignedRequest = PutObjectPresignRequest.builder()
