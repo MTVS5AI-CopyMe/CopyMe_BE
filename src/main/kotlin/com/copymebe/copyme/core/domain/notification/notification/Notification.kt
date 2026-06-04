@@ -47,4 +47,12 @@ class Notification protected constructor(
             )
         }
     }
+
+    fun isOwner(memberId: UUID): Boolean {
+        return this.memberId == memberId
+    }
+
+    fun read() {
+        this.isRead = true
+    }
 }
