@@ -15,4 +15,25 @@ class NotificationSchedule protected constructor(
 
     @Column(name = "time", nullable = false)
     var time: LocalTime,
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun create(
+            memberId: UUID,
+            time: LocalTime,
+        ): NotificationSchedule {
+            return NotificationSchedule(
+                memberId = memberId,
+                time = time,
+            )
+        }
+
+        /**
+         * 30분 단위인지 확인
+         */
+        fun validateHalfHour(time: LocalTime): Boolean {
+            val isValid = (time.minute % 30 != 0 || time.second != 0 || time.nano != 0).not()
+
+            return isValid
+        }
+    }
+}
