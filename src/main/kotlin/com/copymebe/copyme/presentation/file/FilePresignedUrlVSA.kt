@@ -1,5 +1,6 @@
 package com.copymebe.copyme.presentation.file
 
+import com.copymebe.copyme.core.global.file_storage.PresignedUrlService
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
@@ -22,17 +23,6 @@ data class FilePresignedUrlRequest(
         message = "파일 키 형식이 올바르지 않습니다. (예: filename.ext)"
     )
     val fileKey: String,
-
-    @Schema(
-        description = "MIME 타입",
-        example = "image/png"
-    )
-    @field:NotBlank(message = "MIME 타입은 필수 입력 항목입니다.")
-    @field:Pattern(
-        regexp = "^[^/\\s]+/[^/\\s]+$",
-        message = "MIME 타입 형식이 올바르지 않습니다. (예: image/png)"
-    )
-    val contentType: String
 )
 
 data class FilePresignedUrlResponse(
@@ -45,18 +35,20 @@ data class FilePresignedUrlResponse(
 
 @Tag(name = "File")
 @RestController
-class FilePresignedUrlVSA {
+class FilePresignedUrlVSA(
+    private val presignedUrlService: PresignedUrlService
+) {
     @Operation(summary = "Presigned Url 발급")
     @PostMapping("/api/v1/files/presigned-url")
     fun generatePresignedUrl(
         @RequestBody @Valid req: FilePresignedUrlRequest
     ): CustomResponseEntity<FilePresignedUrlResponse> {
-        // TODO: PresignedUrl 발급 로직
+        val (presignedUrl, resourceUrl) = presignedUrlService.createPresignedUrl(req.fileKey)
 
         return CustomResponseEntity(
             data = FilePresignedUrlResponse(
-                presignedUrl = "test",
-                resourceUrl = "test"
+                presignedUrl = presignedUrl,
+                resourceUrl = resourceUrl
             )
         )
     }

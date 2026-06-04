@@ -28,3 +28,11 @@ spring:
     signup:
       auth-token:
         secret: "dGVzdC1wcm9qZWN0LW1lbWJlci1zaWdudXAtanNvbi13ZWItdG9rZW4="
+
+cloudflare:
+  r2:
+    endpoint: ""
+    access-key: ""
+    secret-key: ""
+    bucket-name: ""
+    cdn: ""

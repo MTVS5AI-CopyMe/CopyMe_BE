@@ -38,3 +38,7 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+#
+application-dev.yaml
+application-prod.yaml
