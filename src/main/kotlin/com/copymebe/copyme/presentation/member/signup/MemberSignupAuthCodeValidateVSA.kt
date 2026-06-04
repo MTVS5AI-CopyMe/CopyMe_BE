@@ -38,7 +38,7 @@ class MemberSignupAuthCodeValidateVSA(
     private val memberSignupAuthenticationManagerRepo: MemberSignupAuthenticationManagerRepo,
     private val memberSignupAuthTokenProvider: MemberSignupAuthTokenProvider,
 ) {
-    @Operation(summary = "멤버 회원가입 인증코드 검증")
+    @Operation(summary = "멤버 회원가입 인증코드 검증", description = "이메일 발송 구현 전까지 인증코드 asd123 고정")
     @CustomApiExceptions(
         MemberSignupAuthCodeInvalidException::class,
     )
@@ -55,10 +55,18 @@ class MemberSignupAuthCodeValidateVSA(
                 ?: MemberSignupAuthenticationManager.create(email)
 
         // 인증 매니저에 인증 요청
-        memberSignupAuthenticationManager.authenticateOrThrow(req.authCode)
+        // memberSignupAuthenticationManager.authenticateOrThrow(req.authCode)
+        //
+        // // 저장
+        // memberSignupAuthenticationManagerRepo.save(memberSignupAuthenticationManager)
 
-        // 저장
-        memberSignupAuthenticationManagerRepo.save(memberSignupAuthenticationManager)
+        // 외부 이메일 발송 서비스 구현까지 임시 처리
+        run {
+            if (req.authCode != "asd123") {
+                throw MemberSignupAuthCodeInvalidException()
+            }
+            memberSignupAuthenticationManager.requests.clear()
+        }
 
         // 이메일 인증토큰
         val emailAuthToken = memberSignupAuthTokenProvider.createToken(email)
