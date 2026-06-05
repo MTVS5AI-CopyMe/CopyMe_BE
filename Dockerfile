@@ -13,4 +13,4 @@ EXPOSE 8080
 
 # 5. 컨테이너가 시작될 때 스프링 부트를 실행할 명령어 정의
 # 개발자님이 사용하는 dev 프로필 설정을 기본값으로 넣어둡니다.
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=dev"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]

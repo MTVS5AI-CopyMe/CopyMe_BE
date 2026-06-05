@@ -27,7 +27,7 @@ data class QuestAnswerCreateRequest(
         example = "019e8d4b-e50b-7c38-b4f1-382ec3e7cc7d"
     )
     @field:NotEmpty
-    val questImageId: UUID,
+    val questImageId: String,
 
     @Schema(
         description = "응답 이미지",
@@ -53,7 +53,9 @@ class QuestAnswerCreateVSA(
         val userId = authentication.getUserId()
 
         // 퀘스트 이미지 불러오기
-        val questImage = this.questImageRepo.findByIdOrNull(req.questImageId)
+        val questImage = this.questImageRepo.findByIdOrNull(
+            UUID.fromString(req.questImageId)
+        )
             ?: throw CustomBadRequestException("존재하지 않는 퀘스트 이미지 ID")
 
         // TODO: 유사도 계산 API 호출

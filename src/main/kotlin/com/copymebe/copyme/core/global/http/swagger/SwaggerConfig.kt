@@ -3,12 +3,15 @@ package com.copymebe.copyme.core.global.http.swagger
 import com.copymebe.copyme.core.domain.base.ExceptionMetadata
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.security.SecurityScheme
+import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.media.Content
 import io.swagger.v3.oas.models.media.MediaType
 import io.swagger.v3.oas.models.media.ObjectSchema
 import io.swagger.v3.oas.models.media.StringSchema
 import io.swagger.v3.oas.models.responses.ApiResponse
+import io.swagger.v3.oas.models.servers.Server
 import org.springdoc.core.customizers.OperationCustomizer
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import kotlin.reflect.full.companionObjectInstance
@@ -24,7 +27,20 @@ object SwaggerSecurityConst {
     scheme = "bearer",
     bearerFormat = "JWT"
 )
-class SwaggerConfig {
+class SwaggerConfig(
+    @Value($$"${swagger.server-url:http://localhost:8080}")
+    private val serverUrl: String
+) {
+    @Bean
+    fun openAPI(): OpenAPI {
+        // 클라우드플레어 도메인을 HTTPS 주소로 명시적 등록
+        val prodServer = Server().apply {
+            url = serverUrl
+        }
+
+        return OpenAPI().servers(listOf(prodServer))
+    }
+
     @Bean
     fun apiExceptionsCustomizer(): OperationCustomizer {
         return OperationCustomizer { operation, handlerMethod ->

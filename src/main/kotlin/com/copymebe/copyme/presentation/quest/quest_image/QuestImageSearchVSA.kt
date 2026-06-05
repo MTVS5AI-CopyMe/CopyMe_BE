@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -30,7 +31,7 @@ class QuestImageSearchVSA(
 ) {
     @Operation(summary = "퀘스트 이미지 검색")
     @GetMapping("/api/v1/quest-images")
-    fun search(@Valid req: QuestImageSearchRequest): CustomResponseEntity<OffsetPage<List<QuestImageDto>>> {
+    fun search(@ParameterObject @Valid req: QuestImageSearchRequest): CustomResponseEntity<OffsetPage<List<QuestImageDto>>> {
         val pageable = PageRequest.of(req.page, req.size)
 
         val r = questImageRepo.findAll(pageable)

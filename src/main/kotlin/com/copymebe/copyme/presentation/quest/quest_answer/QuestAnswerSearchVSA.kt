@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.hibernate.validator.constraints.Range
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -30,7 +31,7 @@ data class QuestAnswerSearchRequest(
         required = false,
         example = "123e4567-e89b-12d3-a456-426614174000"
     )
-    val memberId: UUID? = null
+    val memberId: String? = null
 )
 
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
@@ -41,18 +42,18 @@ class QuestAnswerSearchVSA(
 ) {
     @Operation(summary = "퀘스트 응답 검색")
     @GetMapping("/api/v1/quest-answers")
-    fun search(@Valid req: QuestAnswerSearchRequest): CustomResponseEntity<OffsetPage<List<QuestAnswerDto>>> {
+    fun search(@ParameterObject @Valid req: QuestAnswerSearchRequest): CustomResponseEntity<OffsetPage<List<QuestAnswerDto>>> {
         val pageable = PageRequest.of(req.page, req.size)
 
         val r = when {
             req.memberId != null ->
-                questAnswerRepo.findAllByMemberId(
-                    memberId = req.memberId,
+                questAnswerRepo.findAllByMemberIdAndDeletedAtNull(
+                    memberId = UUID.fromString(req.memberId),
                     pageable = pageable
                 )
 
             else ->
-                questAnswerRepo.findAll(pageable)
+                questAnswerRepo.findAllByDeletedAtNull(pageable)
         }.map(QuestAnswerDto::fromEntity)
             .let { OffsetPage.create(it) }
 

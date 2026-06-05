@@ -102,7 +102,7 @@ class NotificationHalfHourScheduler(
         val memberIds = members.map { it.id }
 
         val questImages = questImageRepo.findAll()
-        val questAnswers = questAnswerRepo.findAllByMemberIdIn(memberIds)
+        val questAnswers = questAnswerRepo.findAllByMemberIdInAndDeletedAtNull(memberIds)
 
         val memberToQuestImage = members.associateWith { member ->
             // 멤버 응답만 필터링

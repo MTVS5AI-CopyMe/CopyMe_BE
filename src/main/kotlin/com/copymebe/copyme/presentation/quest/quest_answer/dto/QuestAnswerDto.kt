@@ -4,6 +4,7 @@ import com.copymebe.copyme.core.domain.quest.quest_answer.models.QuestAnswer
 import com.copymebe.copyme.core.domain.quest.quest_answer.models.QuestAnswerScoreGrade
 import com.copymebe.copyme.presentation.quest.quest_image.dto.QuestImageDto
 import io.swagger.v3.oas.annotations.media.Schema
+import java.time.LocalDateTime
 import java.util.*
 
 data class QuestAnswerDto(
@@ -24,6 +25,12 @@ data class QuestAnswerDto(
 
     @Schema(description = "Score Grade")
     val scoreGrade: QuestAnswerScoreGrade,
+
+    @Schema(description = "생성일시")
+    val createdAt: LocalDateTime,
+
+    @Schema(description = "수정일시")
+    val updatedAt: LocalDateTime,
 ) {
     companion object {
         fun fromEntity(e: QuestAnswer): QuestAnswerDto {
@@ -34,6 +41,8 @@ data class QuestAnswerDto(
                 answerImageUrl = e.answerImageUrl,
                 score = e.score.score,
                 scoreGrade = e.score.scoreGrade,
+                createdAt = e.createdAt,
+                updatedAt = e.updatedAt,
             )
         }
     }

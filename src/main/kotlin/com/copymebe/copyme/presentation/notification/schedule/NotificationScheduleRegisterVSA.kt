@@ -34,7 +34,7 @@ data class RegisterNotificationScheduleRequest(
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Notification")
 @RestController
-class RegisterNotificationScheduleVSA(
+class NotificationScheduleRegisterVSA(
     private val notificationScheduleRepo: NotificationScheduleRepo,
 ) {
     @Operation(summary = "알림 예약")
