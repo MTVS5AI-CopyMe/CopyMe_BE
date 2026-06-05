@@ -42,5 +42,5 @@ out/
 #
 application-dev.yaml
 application-prod.yaml
-deploy2.sh
+deploy.sh
 *.tar
