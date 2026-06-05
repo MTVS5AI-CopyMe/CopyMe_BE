@@ -36,6 +36,7 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http.apply {
             csrf { it.disable() }
+            cors { it.disable() }
             headers {
                 //  H2 콘솔 iframe 허용을 위한 설정
                 it.frameOptions { frameOptions -> frameOptions.sameOrigin() }

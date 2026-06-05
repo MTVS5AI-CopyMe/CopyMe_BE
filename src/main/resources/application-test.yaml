@@ -20,14 +20,36 @@ spring:
 
   security:
     jwt:
-      secret: "dGVzdC1wcm9qZWN0LWpzb24td2ViLXRva2Vu"
-      access-token-duration: 1d
-      refresh-token-duration: 7d
+      secret: ""
+      access-token-duration: "5m"
+      refresh-token-duration: "10m"
 
   member:
     signup:
       auth-token:
-        secret: "dGVzdC1wcm9qZWN0LW1lbWJlci1zaWdudXAtanNvbi13ZWItdG9rZW4="
+        secret: ""
+
+  mail:
+    # SMTP 서버 호스트
+    host: "smtp.gmail.com"
+    # SMTP 서버 포트
+    port: 587
+    # SMTP 서버 로그인 아이디
+    username: ""
+    # SMTP 서버 로그인 비밀번호
+    password: ""
+    properties:
+      mail:
+        smtp:
+          # 사용자 인증 시도 여부
+          auth: true
+          starttls:
+            # starttls 활성화 여부
+            enable: true
+    custom-props:
+      sender:
+        display-name: ""
+        address: ""
 
 cloudflare:
   r2:

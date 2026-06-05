@@ -3,8 +3,10 @@ package com.copymebe.copyme.presentation.member.signup
 import com.copymebe.copyme.core.domain.member.auth.MaxSignupAuthRequestExceededException
 import com.copymebe.copyme.core.domain.member.auth.MemberSignupAuthenticationManagerRepo
 import com.copymebe.copyme.core.domain.member.auth.models.MemberSignupAuthenticationManager
+import com.copymebe.copyme.core.domain.member.auth.models.MemberSignupAuthenticationManagerRequest
 import com.copymebe.copyme.core.domain.member.member.AlreadyExistsMemberException
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
+import com.copymebe.copyme.core.global.email.EmailService
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
 import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import io.swagger.v3.oas.annotations.Operation
@@ -30,6 +32,7 @@ data class MemberSignupAuthCodeRequest(
 class MemberSignupAuthCodeRequestVSA(
     private val memberRepo: MemberRepo,
     private val memberSignupAuthenticationManagerRepo: MemberSignupAuthenticationManagerRepo,
+    private val emailService: EmailService,
 ) {
     @Operation(summary = "멤버 회원가입 인증코드 요청")
     @CustomApiExceptions(
@@ -57,8 +60,17 @@ class MemberSignupAuthCodeRequestVSA(
 
         // 인증 매니저에 인증요청 추가
         val newAuthCodeRequest = memberSignupAuthenticationManager.addRequestOrThrow()
-        // TODO: 이메일로 AuthCode 전송하기
-        println(newAuthCodeRequest.authCode)
+
+        // 이메일로 AuthCode 전송하기
+        emailService.sendSimpleMail(
+            to = listOf(email),
+            subject = "[CopyMe] 회원가입 인증코드",
+            text = """
+                인증코드: ${newAuthCodeRequest.authCode}
+
+                인증 코드는 ${MemberSignupAuthenticationManagerRequest.EXPIRED_MINUTES}분간 유효합니다.
+            """.trimIndent()
+        )
 
         // 저장
         memberSignupAuthenticationManagerRepo.save(memberSignupAuthenticationManager)
