@@ -12,6 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+
 
 @Configuration
 class SecurityConfig(
@@ -35,6 +39,7 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http.apply {
+            cors { it.configurationSource(corsConfigurationSource()) }
             csrf { it.disable() }
             headers {
                 //  H2 콘솔 iframe 허용을 위한 설정
@@ -54,5 +59,26 @@ class SecurityConfig(
                 UsernamePasswordAuthenticationFilter::class.java
             )
         }.build()
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val config = CorsConfiguration().apply {
+            // 허용할 오리진(도메인) 설정
+            setAllowedOriginPatterns(listOf("*"))
+
+            // 허용할 HTTP 메서드 설정
+            setAllowedMethods(listOf("*"))
+
+            // 허용할 HTTP 헤더 설정
+            allowedHeaders = listOf("*")
+
+            // 자격 증명(쿠키, 인증 정보) 허용 여부
+            allowCredentials = true
+        }
+
+        return UrlBasedCorsConfigurationSource().apply {
+            registerCorsConfiguration("/**", config)
+        }
     }
 }
