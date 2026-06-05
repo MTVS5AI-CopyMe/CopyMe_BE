@@ -8,4 +8,5 @@ import java.util.*
 
 interface QuestAnswerRepo : JpaRepository<QuestAnswer, UUID> {
     fun findAllByMemberId(memberId: UUID?, pageable: Pageable): Page<QuestAnswer>
+    fun findAllByMemberIdIn(memberIds: List<UUID>): List<QuestAnswer>
 }

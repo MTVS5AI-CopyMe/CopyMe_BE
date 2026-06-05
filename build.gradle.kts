@@ -58,6 +58,8 @@ dependencies {
     implementation("com.aventrix.jnanoid:jnanoid:2.0.0")
     // Email
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    // Firebase
+    implementation("com.google.firebase:firebase-admin:9.8.0")
     // ETC
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

@@ -44,3 +44,4 @@ application-dev.yaml
 application-prod.yaml
 deploy.sh
 *.tar
+ServiceAccountKey.json

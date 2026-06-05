@@ -6,4 +6,5 @@ import java.util.*
 
 interface NotificationScheduleRepo : JpaRepository<NotificationSchedule, UUID> {
     fun findByMemberIdAndTime(memberId: UUID, time: LocalTime): NotificationSchedule?
+    fun findAllByTime(time: LocalTime): List<NotificationSchedule>
 }

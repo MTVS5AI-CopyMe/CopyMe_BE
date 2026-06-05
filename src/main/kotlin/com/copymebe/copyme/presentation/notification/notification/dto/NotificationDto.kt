@@ -20,7 +20,7 @@ data class NotificationDto(
     @Schema(description = "Event Key")
     val eventKey: String,
 
-    @Schema(description = "Payload")
+    @Schema(description = "Payload (JSON String)")
     val payload: String,
 
     @Schema(description = "읽음 여부")
