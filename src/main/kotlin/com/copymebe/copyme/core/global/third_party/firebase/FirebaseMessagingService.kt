@@ -21,7 +21,7 @@ class FirebaseMessagingService(
         /** 이미지 URL */
         imageUrl: String? = null,
         /** Data로 전달될 이벤트 키 */
-        eventKey: String,
+        eventId: String,
         /** Data로 전달될 페이로드 */
         payload: ObjectNode
     ) {
@@ -36,7 +36,7 @@ class FirebaseMessagingService(
                     }
                     .build()
             )
-            .putData("eventKey", eventKey)
+            .putData("eventId", eventId)
             .putData("payload", payload.toString())
             .addAllTokens(fcmTokens)
             .build()

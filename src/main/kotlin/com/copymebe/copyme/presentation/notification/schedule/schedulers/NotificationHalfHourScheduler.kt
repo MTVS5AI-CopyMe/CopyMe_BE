@@ -58,7 +58,7 @@ class NotificationHalfHourScheduler(
                 memberId = member.id,
                 title = "이미지 따라하기",
                 description = "잠시 휴식을 취하며 이미지를 따라해보세요 😊",
-                eventKey = event.eventKey,
+                eventKey = event.eventId,
                 payload = payload.toString()
             )
 
@@ -69,7 +69,7 @@ class NotificationHalfHourScheduler(
                 title = newNotification.title,
                 body = newNotification.description,
                 imageUrl = questImage.imageUrl,
-                eventKey = newNotification.eventKey,
+                eventId = newNotification.eventKey,
                 payload = payload,
             )
         }

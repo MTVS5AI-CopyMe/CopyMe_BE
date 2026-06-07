@@ -7,10 +7,10 @@ class ExternalEvent
  * 퀘스트 알림 생성 이벤트
  */
 data class QuestNotificationCreatedExternalEvent(
-    val eventKey: String = EVENT_KEY,
+    val eventId: String = EVENT_ID,
     val questId: String,
 ) {
     companion object {
-        const val EVENT_KEY = "EXTERNAL__QUEST_NOTIFICATION__CREATED"
+        const val EVENT_ID = "EXTERNAL__QUEST_NOTIFICATION__CREATED"
     }
 }
