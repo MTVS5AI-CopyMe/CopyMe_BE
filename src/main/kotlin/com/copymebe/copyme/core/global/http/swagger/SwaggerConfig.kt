@@ -1,6 +1,10 @@
 package com.copymebe.copyme.core.global.http.swagger
 
 import com.copymebe.copyme.core.domain.base.ExceptionMetadata
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
+import io.swagger.v3.core.jackson.ModelResolver
+import io.swagger.v3.core.util.Json
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.security.SecurityScheme
 import io.swagger.v3.oas.models.OpenAPI
@@ -85,5 +89,30 @@ class SwaggerConfig(
 
             operation
         }
+    }
+
+    @Bean
+    fun modelResolver(): ModelResolver {
+        // Swagger가 모델을 분석할 때 사용할 ObjectMapper를 가져옵니다.
+        val objectMapper = Json.mapper().copy()
+            .apply {
+                // Getter 탐색을 완전히 끄고, 오직 실제 Field(변수명)만 보도록 설정을 강제합니다.
+                // 이렇게 하면 isRead() 메서드가 아닌 'isRead' 필드명 자체를 파싱합니다.
+                setVisibility(
+                    PropertyAccessor.FIELD,
+                    JsonAutoDetect.Visibility.ANY
+                )
+                setVisibility(
+                    PropertyAccessor.GETTER,
+                    JsonAutoDetect.Visibility.NONE
+                )
+                setVisibility(
+                    PropertyAccessor.IS_GETTER,
+                    JsonAutoDetect.Visibility.NONE
+                )
+            }
+
+        // 변경된 설정을 가진 ModelResolver를 빈으로 등록하면 Springdoc이 이를 채택합니다.
+        return ModelResolver(objectMapper)
     }
 }
