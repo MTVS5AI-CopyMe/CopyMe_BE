@@ -6,16 +6,28 @@ import io.swagger.v3.oas.annotations.media.Schema
 import java.util.*
 
 data class QuestImageDto(
-    @Schema(description = "Quest Image ID")
+    @Schema(
+        description = "Quest Image ID",
+        required = true
+    )
     val id: UUID,
 
-    @Schema(description = "Quest Image URL")
+    @Schema(
+        description = "Quest Image URL",
+        required = true
+    )
     val imageUrl: String,
 
-    @Schema(description = "Quest Image Category")
+    @Schema(
+        description = "Quest Image Category",
+        required = true
+    )
     val category: QuestImageCategory,
 
-    @Schema(description = "Quest Image Tags")
+    @Schema(
+        description = "Quest Image Tags",
+        required = true
+    )
     val tags: List<String>
 ) {
     companion object {

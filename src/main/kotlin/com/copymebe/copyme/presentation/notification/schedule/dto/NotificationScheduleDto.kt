@@ -7,13 +7,23 @@ import java.time.LocalTime
 import java.util.*
 
 data class NotificationScheduleDto(
-    @Schema(description = "Notification Schedule ID")
+    @Schema(
+        description = "Notification Schedule ID",
+        required = true
+    )
     val id: UUID,
 
-    @Schema(description = "Member ID")
+    @Schema(
+        description = "Member ID",
+        required = true
+    )
     val memberId: UUID,
 
-    @Schema(description = "Notification Time", example = "09:30")
+    @Schema(
+        description = "Notification Time",
+        example = "09:30",
+        required = true
+    )
     @JsonFormat(pattern = "HH:mm")
     val time: LocalTime,
 ) {

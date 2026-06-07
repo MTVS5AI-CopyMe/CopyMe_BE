@@ -34,6 +34,14 @@ data class QuestAnswerSearchRequest(
     val memberId: String? = null
 )
 
+class QuestAnswerSearchResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: OffsetPage<List<QuestAnswerDto>>
+) : CustomResponseEntity<OffsetPage<List<QuestAnswerDto>>>()
+
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Quest")
 @RestController
@@ -42,7 +50,9 @@ class QuestAnswerSearchVSA(
 ) {
     @Operation(summary = "퀘스트 응답 검색")
     @GetMapping("/api/v1/quest-answers")
-    fun search(@ParameterObject @Valid req: QuestAnswerSearchRequest): CustomResponseEntity<OffsetPage<List<QuestAnswerDto>>> {
+    fun search(
+        @ParameterObject @Valid req: QuestAnswerSearchRequest
+    ): QuestAnswerSearchResponse {
         val pageable = PageRequest.of(req.page, req.size)
 
         val r = when {
@@ -57,6 +67,6 @@ class QuestAnswerSearchVSA(
         }.map(QuestAnswerDto::fromEntity)
             .let { OffsetPage.create(it) }
 
-        return CustomResponseEntity(data = r)
+        return QuestAnswerSearchResponse(data = r)
     }
 }

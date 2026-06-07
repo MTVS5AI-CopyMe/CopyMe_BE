@@ -27,6 +27,14 @@ data class MemberSignupAuthCodeRequest(
     val email: String,
 )
 
+class MemberSignupAuthCodeResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: Boolean
+) : CustomResponseEntity<Boolean>()
+
 @Tag(name = "Member Signup")
 @RestController
 class MemberSignupAuthCodeRequestVSA(
@@ -42,7 +50,7 @@ class MemberSignupAuthCodeRequestVSA(
     @PostMapping("/api/v1/members/signup/authcode")
     fun requestSignupAuthCode(
         @RequestBody @Valid req: MemberSignupAuthCodeRequest
-    ): CustomResponseEntity<Boolean> {
+    ): MemberSignupAuthCodeResponse {
         val email = req.email
 
         // 이미 가입된 회원인지 확인
@@ -75,6 +83,6 @@ class MemberSignupAuthCodeRequestVSA(
         // 저장
         memberSignupAuthenticationManagerRepo.save(memberSignupAuthenticationManager)
 
-        return CustomResponseEntity(data = true)
+        return MemberSignupAuthCodeResponse(data = true)
     }
 }

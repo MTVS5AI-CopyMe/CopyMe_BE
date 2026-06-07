@@ -23,6 +23,14 @@ data class QuestImageSearchRequest(
     val size: Int,
 )
 
+class QuestImageSearchResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: OffsetPage<List<QuestImageDto>>
+) : CustomResponseEntity<OffsetPage<List<QuestImageDto>>>()
+
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Quest")
 @RestController
@@ -31,13 +39,15 @@ class QuestImageSearchVSA(
 ) {
     @Operation(summary = "퀘스트 이미지 검색")
     @GetMapping("/api/v1/quest-images")
-    fun search(@ParameterObject @Valid req: QuestImageSearchRequest): CustomResponseEntity<OffsetPage<List<QuestImageDto>>> {
+    fun search(
+        @ParameterObject @Valid req: QuestImageSearchRequest
+    ): QuestImageSearchResponse {
         val pageable = PageRequest.of(req.page, req.size)
 
         val r = questImageRepo.findAll(pageable)
             .map(QuestImageDto::fromEntity)
             .let { OffsetPage.create(it) }
 
-        return CustomResponseEntity(data = r)
+        return QuestImageSearchResponse(data = r)
     }
 }

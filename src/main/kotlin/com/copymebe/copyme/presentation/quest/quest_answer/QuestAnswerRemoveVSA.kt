@@ -7,6 +7,7 @@ import com.copymebe.copyme.core.global.http.swagger.SwaggerSecurityConst
 import com.copymebe.copyme.core.global.security.CustomForbiddenException
 import com.copymebe.copyme.core.global.security.getUserId
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.repository.findByIdOrNull
@@ -16,6 +17,14 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+
+class QuestAnswerRemoveResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: UUID
+) : CustomResponseEntity<UUID>()
 
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Quest")
@@ -28,7 +37,7 @@ class QuestAnswerRemoveVSA(
     fun remove(
         authentication: Authentication,
         @PathVariable("questId") questId: UUID,
-    ): CustomResponseEntity<UUID> {
+    ): QuestAnswerRemoveResponse {
         val userId = authentication.getUserId()
 
         val questAnswer = questAnswerRepo.findByIdOrNull(questId)
@@ -45,6 +54,6 @@ class QuestAnswerRemoveVSA(
         // 저장
         questAnswerRepo.save(questAnswer)
 
-        return CustomResponseEntity(data = questAnswer.id)
+        return QuestAnswerRemoveResponse(data = questAnswer.id)
     }
 }

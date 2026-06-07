@@ -28,6 +28,14 @@ data class NotificationSearchRequest(
     val size: Int,
 )
 
+class NotificationSearchResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: OffsetPage<List<NotificationDto>>
+) : CustomResponseEntity<OffsetPage<List<NotificationDto>>>()
+
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Notification")
 @RestController
@@ -39,7 +47,7 @@ class NotificationSearchVSA(
     fun search(
         authentication: Authentication,
         @ParameterObject @Valid req: NotificationSearchRequest,
-    ): CustomResponseEntity<OffsetPage<List<NotificationDto>>> {
+    ): NotificationSearchResponse {
         val userId = authentication.getUserId()
         val pageable = PageRequest.of(req.page, req.size)
 
@@ -49,6 +57,6 @@ class NotificationSearchVSA(
         ).map(NotificationDto::fromEntity)
             .let { OffsetPage.create(it) }
 
-        return CustomResponseEntity(data = r)
+        return NotificationSearchResponse(data = r)
     }
 }

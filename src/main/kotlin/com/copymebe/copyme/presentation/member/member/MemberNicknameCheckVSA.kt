@@ -19,6 +19,14 @@ data class MemberNicknameCheckRequest(
     val nickname: String
 )
 
+class MemberNicknameCheckResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: Boolean
+) : CustomResponseEntity<Boolean>()
+
 @Tag(name = "Member")
 @RestController
 class MemberNicknameCheckVSA(
@@ -26,9 +34,9 @@ class MemberNicknameCheckVSA(
 ) {
     @Operation(summary = "멤버 닉네임 중복검사")
     @GetMapping("/api/v1/members/nickname-check")
-    fun checkNickname(@Valid req: MemberNicknameCheckRequest): CustomResponseEntity<Boolean> {
+    fun checkNickname(@Valid req: MemberNicknameCheckRequest): MemberNicknameCheckResponse {
         val isValidNickname = memberRepo.findByProfileNickname(req.nickname) == null
 
-        return CustomResponseEntity(data = isValidNickname)
+        return MemberNicknameCheckResponse(data = isValidNickname)
     }
 }

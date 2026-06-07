@@ -37,6 +37,14 @@ data class QuestAnswerCreateRequest(
     val answerImageUrl: String,
 )
 
+class QuestAnswerCreateResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: UUID
+) : CustomResponseEntity<UUID>()
+
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Quest")
 @RestController
@@ -49,7 +57,7 @@ class QuestAnswerCreateVSA(
     fun create(
         authentication: Authentication,
         @RequestBody @Valid req: QuestAnswerCreateRequest
-    ): CustomResponseEntity<UUID> {
+    ): QuestAnswerCreateResponse {
         val userId = authentication.getUserId()
 
         // 퀘스트 이미지 불러오기
@@ -72,6 +80,6 @@ class QuestAnswerCreateVSA(
         // 저장
         questAnswerRepo.save(questAnswer)
 
-        return CustomResponseEntity(data = questAnswer.id)
+        return QuestAnswerCreateResponse(data = questAnswer.id)
     }
 }

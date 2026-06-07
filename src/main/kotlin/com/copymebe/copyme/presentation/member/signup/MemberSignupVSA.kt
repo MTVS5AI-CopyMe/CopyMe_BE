@@ -60,6 +60,14 @@ data class MemberSignupRequest(
     val emailAuthToken: String,
 )
 
+class MemberSignupResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: UUID
+) : CustomResponseEntity<UUID>()
+
 @Tag(name = "Member Signup")
 @RestController
 class MemberSignupVSA(
@@ -76,7 +84,7 @@ class MemberSignupVSA(
     @PostMapping("/api/v1/members/signup")
     fun signup(
         @RequestBody @Valid req: MemberSignupRequest
-    ): CustomResponseEntity<UUID> {
+    ): MemberSignupResponse {
         // EmailAuthToken 검증
         memberSignupAuthTokenProvider
             .parseEmailOrThrow(req.emailAuthToken)
@@ -108,6 +116,6 @@ class MemberSignupVSA(
         // 저장
         memberRepo.save(newMember)
 
-        return CustomResponseEntity(data = newMember.id)
+        return MemberSignupResponse(data = newMember.id)
     }
 }

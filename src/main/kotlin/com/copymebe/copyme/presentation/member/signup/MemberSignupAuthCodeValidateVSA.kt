@@ -32,6 +32,14 @@ data class MemberSignupAuthCodeValidateRequest(
     val authCode: String,
 )
 
+class MemberSignupAuthCodeValidateResponse(
+    @Schema(
+        description = "데이터",
+        required = true,
+    )
+    override val data: String
+) : CustomResponseEntity<String>()
+
 @Tag(name = "Member Signup")
 @RestController
 class MemberSignupAuthCodeValidateVSA(
@@ -45,7 +53,7 @@ class MemberSignupAuthCodeValidateVSA(
     @PostMapping("/api/v1/members/signup/authcode-validate")
     fun validateSignupAuthCode(
         @RequestBody @Valid req: MemberSignupAuthCodeValidateRequest
-    ): CustomResponseEntity<String> {
+    ): MemberSignupAuthCodeValidateResponse {
         val email = req.email
 
         // 회원가입 인증 매니저 불러오기
@@ -63,6 +71,6 @@ class MemberSignupAuthCodeValidateVSA(
         // 이메일 인증토큰
         val emailAuthToken = memberSignupAuthTokenProvider.createToken(email)
 
-        return CustomResponseEntity(data = emailAuthToken)
+        return MemberSignupAuthCodeValidateResponse(data = emailAuthToken)
     }
 }

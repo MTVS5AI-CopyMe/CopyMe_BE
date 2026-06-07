@@ -56,15 +56,32 @@ data class MemberSignInRequest(
 )
 
 data class MemberSignInDto(
-    @Schema(description = "Member ID")
+    @Schema(
+        description = "Member ID",
+        required = true
+    )
     val memberId: UUID,
 
-    @Schema(description = "Access Token")
+    @Schema(
+        description = "Access Token",
+        required = true
+    )
     val accessToken: String,
 
-    @Schema(description = "Refresh Token")
+    @Schema(
+        description = "Refresh Token",
+        required = true
+    )
     val refreshToken: String,
 )
+
+class MemberSignInResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: MemberSignInDto
+) : CustomResponseEntity<MemberSignInDto>()
 
 @Tag(name = "Member SignIn")
 @RestController
@@ -81,7 +98,7 @@ class MemberSignInVSA(
     @PostMapping("/api/v1/members/signin")
     fun signIn(
         @RequestBody @Valid req: MemberSignInRequest,
-    ): CustomResponseEntity<MemberSignInDto> {
+    ): MemberSignInResponse {
         val member = memberRepo.findByEmailAndDeletedAtNull(req.email)
             ?: throw NotFoundMemberException()
 
@@ -111,7 +128,7 @@ class MemberSignInVSA(
         // 저장
         memberRepo.save(member)
 
-        return CustomResponseEntity(
+        return MemberSignInResponse(
             data = MemberSignInDto(
                 memberId = member.id,
                 accessToken = accessToken,

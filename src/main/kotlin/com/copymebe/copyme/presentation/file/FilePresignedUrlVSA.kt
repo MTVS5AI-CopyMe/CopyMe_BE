@@ -25,13 +25,27 @@ data class FilePresignedUrlRequest(
     val fileKey: String,
 )
 
-data class FilePresignedUrlResponse(
-    @Schema(description = "Presigned Url")
+data class FilePresignedUrlDto(
+    @Schema(
+        description = "Presigned Url",
+        required = true
+    )
     val presignedUrl: String,
 
-    @Schema(description = "읽기 전용 Url")
+    @Schema(
+        description = "읽기 전용 Url",
+        required = true
+    )
     val resourceUrl: String,
 )
+
+class FilePresignedUrlResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: FilePresignedUrlDto
+) : CustomResponseEntity<FilePresignedUrlDto>()
 
 @Tag(name = "File")
 @RestController
@@ -45,11 +59,11 @@ class FilePresignedUrlVSA(
     @PostMapping("/api/v1/files/presigned-url")
     fun generatePresignedUrl(
         @RequestBody @Valid req: FilePresignedUrlRequest
-    ): CustomResponseEntity<FilePresignedUrlResponse> {
+    ): FilePresignedUrlResponse {
         val (presignedUrl, resourceUrl) = presignedUrlService.createPresignedUrl(req.fileKey)
 
-        return CustomResponseEntity(
-            data = FilePresignedUrlResponse(
+        return FilePresignedUrlResponse(
+            data = FilePresignedUrlDto(
                 presignedUrl = presignedUrl,
                 resourceUrl = resourceUrl
             )

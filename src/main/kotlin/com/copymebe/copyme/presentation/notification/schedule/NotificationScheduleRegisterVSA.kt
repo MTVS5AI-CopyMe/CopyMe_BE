@@ -31,6 +31,14 @@ data class RegisterNotificationScheduleRequest(
     val time: LocalTime,
 )
 
+class NotificationScheduleRegisterResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: UUID
+) : CustomResponseEntity<UUID>()
+
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Notification")
 @RestController
@@ -45,7 +53,7 @@ class NotificationScheduleRegisterVSA(
     fun register(
         authentication: Authentication,
         @RequestBody @Valid req: RegisterNotificationScheduleRequest,
-    ): CustomResponseEntity<UUID> {
+    ): NotificationScheduleRegisterResponse {
         val memberId = authentication.getUserId()
 
         // 30분 기준 검사
@@ -65,6 +73,6 @@ class NotificationScheduleRegisterVSA(
         // 저장
         notificationScheduleRepo.save(notificationSchedule)
 
-        return CustomResponseEntity(data = notificationSchedule.id)
+        return NotificationScheduleRegisterResponse(data = notificationSchedule.id)
     }
 }

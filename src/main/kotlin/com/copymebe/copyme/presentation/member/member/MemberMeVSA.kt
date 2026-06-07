@@ -3,53 +3,45 @@ package com.copymebe.copyme.presentation.member.member
 import com.copymebe.copyme.core.domain.member.member.MemberRepo
 import com.copymebe.copyme.core.domain.member.member.NotFoundMemberException
 import com.copymebe.copyme.core.global.http.CustomResponseEntity
-import com.copymebe.copyme.core.global.http.swagger.CustomApiExceptions
 import com.copymebe.copyme.core.global.http.swagger.SwaggerSecurityConst
 import com.copymebe.copyme.core.global.security.getUserId
+import com.copymebe.copyme.presentation.member.member.dto.MemberDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 
-class MemberRemoveResponse(
+class MemberMeResponse(
     @Schema(
         description = "데이터",
         required = true
     )
-    override val data: UUID
-) : CustomResponseEntity<UUID>()
+    override val data: MemberDto
+) : CustomResponseEntity<MemberDto>()
 
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Member")
 @RestController
-class MemberRemoveVSA(
+class MemberMeVSA(
     private val memberRepo: MemberRepo,
 ) {
-    @Operation(summary = "회원 탈퇴")
-    @CustomApiExceptions(
-        NotFoundMemberException::class
-    )
-    @DeleteMapping("/api/v1/members/me")
-    fun remove(
+    @Operation(summary = "내 정보 조회")
+    @GetMapping("/api/v1/members/me")
+    fun findMe(
         authentication: Authentication
-    ): MemberRemoveResponse {
+    ): MemberMeResponse {
         val userId = authentication.getUserId()
 
         // 회원 조회
         val member = memberRepo.findByIdOrNull(userId)
             ?: throw NotFoundMemberException()
 
-        // 삭제 처리
-        member.softDelete()
+        val dto = MemberDto.fromEntity(member)
 
-        // 저장
-        memberRepo.save(member)
-
-        return MemberRemoveResponse(data = member.id)
+        return MemberMeResponse(data = dto)
     }
 }

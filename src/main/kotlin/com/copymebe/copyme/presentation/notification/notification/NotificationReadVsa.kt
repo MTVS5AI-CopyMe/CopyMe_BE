@@ -7,6 +7,7 @@ import com.copymebe.copyme.core.global.http.swagger.SwaggerSecurityConst
 import com.copymebe.copyme.core.global.security.CustomForbiddenException
 import com.copymebe.copyme.core.global.security.getUserId
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.repository.findByIdOrNull
@@ -15,6 +16,14 @@ import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
+
+class NotificationReadResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: Boolean
+) : CustomResponseEntity<Boolean>()
 
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Notification")
@@ -27,7 +36,7 @@ class NotificationReadVsa(
     fun read(
         authentication: Authentication,
         @PathVariable notificationId: UUID,
-    ): CustomResponseEntity<Boolean> {
+    ): NotificationReadResponse {
         val userId = authentication.getUserId()
 
         // 알림 찾기
@@ -45,6 +54,6 @@ class NotificationReadVsa(
         // 저장
         notificationRepo.save(notification)
 
-        return CustomResponseEntity(data = true)
+        return NotificationReadResponse(data = true)
     }
 }

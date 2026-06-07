@@ -17,15 +17,29 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 
-data class MemberRefreshTokenResponse(
-    @Schema(description = "Access Token")
+data class MemberRefreshTokenDto(
+    @Schema(
+        description = "Access Token",
+        required = true
+    )
     @field:NotEmpty
     val accessToken: String,
 
-    @Schema(description = "Refresh Token")
+    @Schema(
+        description = "Refresh Token",
+        required = true
+    )
     @field:NotEmpty
     val refreshToken: String,
 )
+
+class MemberRefreshTokenResponse(
+    @Schema(
+        description = "데이터",
+        required = true
+    )
+    override val data: MemberRefreshTokenDto
+) : CustomResponseEntity<MemberRefreshTokenDto>()
 
 @SecurityRequirement(name = SwaggerSecurityConst.BEARER_AUTH)
 @Tag(name = "Member")
@@ -41,7 +55,7 @@ class MemberRefreshTokenVSA(
     @PostMapping("/api/v1/members/refresh-token")
     fun refreshToken(
         authentication: Authentication
-    ): CustomResponseEntity<MemberRefreshTokenResponse> {
+    ): MemberRefreshTokenResponse {
         val oldRefreshToken = authentication.credentials as String
 
         // Refresh Token으로 Member 찾기
@@ -68,8 +82,8 @@ class MemberRefreshTokenVSA(
         // 저장
         memberRepo.save(member)
 
-        return CustomResponseEntity(
-            data = MemberRefreshTokenResponse(
+        return MemberRefreshTokenResponse(
+            data = MemberRefreshTokenDto(
                 accessToken = newAccessToken,
                 refreshToken = newRefreshToken
             )
