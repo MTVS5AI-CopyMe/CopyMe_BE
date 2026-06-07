@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface QuestAnswerRepo : JpaRepository<QuestAnswer, UUID> {
+    fun findByIdAndDeletedAtNull(id: UUID): QuestAnswer?
     fun findAllByDeletedAtNull(pageable: Pageable): Page<QuestAnswer>
     fun findAllByMemberIdAndDeletedAtNull(memberId: UUID?, pageable: Pageable): Page<QuestAnswer>
     fun findAllByMemberIdInAndDeletedAtNull(memberIds: List<UUID>): List<QuestAnswer>
