@@ -68,4 +68,12 @@ class Member protected constructor(
     fun removeDevice(deviceUid: String) {
         devices.removeIf { it.deviceUid == deviceUid }
     }
+
+    fun updateProfile(
+        profileImageUrl: String,
+        nickname: String,
+    ) {
+        profile.profileImageUrl = profileImageUrl
+        profile.nickname = nickname
+    }
 }
