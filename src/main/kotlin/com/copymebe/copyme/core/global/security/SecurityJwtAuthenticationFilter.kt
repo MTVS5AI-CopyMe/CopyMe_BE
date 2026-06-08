@@ -60,7 +60,11 @@ class SecurityJwtAuthenticationFilter(
             println(e)
             response.writeErrorResponse(
                 objectMapper = objectMapper,
-                exception = defaultAuthException
+                exception = BaseException(
+                    code = "UNKNOWN",
+                    status = HttpStatus.INTERNAL_SERVER_ERROR,
+                    message = e.message!!
+                )
             )
         }
     }
