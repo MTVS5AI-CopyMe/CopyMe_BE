@@ -72,6 +72,7 @@ class NotificationHalfHourScheduler(
                 eventId = newNotification.eventKey,
                 payload = payload,
             )
+
         }
     }
 
@@ -107,6 +108,10 @@ class NotificationHalfHourScheduler(
         val memberToQuestImage = members.associateWith { member ->
             // 멤버 응답만 필터링
             val memberAnswers = questAnswers.filter { qa -> qa.isOwner(member.id) }
+
+            if (memberAnswers.isEmpty()) {
+                return@associateWith questImages.firstOrNull()
+            }
 
             // 멤버가 응답하지 않은 이미지들 중 첫번째 선택
             questImages.firstOrNull { image ->
