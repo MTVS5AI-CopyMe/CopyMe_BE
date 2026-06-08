@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.hibernate.validator.constraints.Range
 import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -47,6 +48,15 @@ class QuestImageSearchVSA(
         val pageable = PageRequest.of(req.page, req.size)
 
         val r = questImageRepo.findAll(pageable)
+            .let { page ->
+                val shuffledList = page.content.toMutableList().apply { shuffle() }
+
+                PageImpl(
+                    shuffledList,
+                    page.pageable,
+                    page.totalElements
+                )
+            }
             .map(QuestImageDto::fromEntity)
             .let { OffsetPage.create(it) }
 

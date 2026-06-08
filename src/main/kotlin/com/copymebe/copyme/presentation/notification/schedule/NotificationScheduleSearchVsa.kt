@@ -51,7 +51,7 @@ class NotificationScheduleSearchVsa(
         val memberId = authentication.getUserId()
         val pageable = PageRequest.of(req.page, req.size)
 
-        val r = notificationScheduleRepo.findAllByMemberId(
+        val r = notificationScheduleRepo.findAllByMemberIdOrderByTimeAsc(
             memberId = memberId,
             pageable = pageable,
         ).map(NotificationScheduleDto::fromEntity)
