@@ -60,6 +60,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     // Firebase
     implementation("com.google.firebase:firebase-admin:9.8.0")
+    // CSV
+    implementation("org.apache.commons:commons-csv:1.14.1")
     // ETC
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

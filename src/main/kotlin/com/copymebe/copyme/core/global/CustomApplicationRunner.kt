@@ -12,7 +12,7 @@ class CustomApplicationRunner(
     private val defaultQuestImageInitializer: DefaultQuestImageInitializer
 ) : ApplicationRunner {
     override fun run(args: ApplicationArguments) {
-        defaultQuestImageInitializer.init()
+        // defaultQuestImageInitializer.init()
     }
 }
 

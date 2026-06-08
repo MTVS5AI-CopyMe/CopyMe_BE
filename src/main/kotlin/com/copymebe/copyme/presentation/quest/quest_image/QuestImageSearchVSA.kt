@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.hibernate.validator.constraints.Range
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,6 +21,7 @@ data class QuestImageSearchRequest(
     val page: Int,
 
     @Schema(description = "페이지 사이즈", defaultValue = "10")
+    @field:Range(min = 1, max = 9999)
     val size: Int,
 )
 

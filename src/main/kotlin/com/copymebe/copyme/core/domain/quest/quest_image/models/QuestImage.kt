@@ -21,8 +21,8 @@ class QuestImage protected constructor(
 ) : BaseEntity() {
     companion object {
         fun create(
-            imageUrl: String,
             category: QuestImageCategory,
+            imageUrl: String,
         ): QuestImage {
             return QuestImage(
                 imageUrl = imageUrl,
