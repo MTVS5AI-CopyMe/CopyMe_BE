@@ -85,7 +85,6 @@ class SecurityJwtTokenProvider(
             token,
             authorities
         )
-
     }
 
     fun validateTokenOrThrow(

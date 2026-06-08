@@ -21,12 +21,6 @@ class SecurityJwtAuthenticationFilter(
     private val jwtTokenProvider: SecurityJwtTokenProvider,
     private val objectMapper: ObjectMapper
 ) : OncePerRequestFilter() {
-    private val defaultAuthException = BaseException(
-        code = "UNAUTHORIZED",
-        status = HttpStatus.UNAUTHORIZED,
-        message = "UNAUTHORIZED"
-    )
-
     private val expiredSecurityTokenException = ExpiredSecurityTokenException()
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
