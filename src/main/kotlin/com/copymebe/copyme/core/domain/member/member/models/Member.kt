@@ -6,10 +6,10 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "member")
 class Member protected constructor(
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     var email: String,
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     var password: String,
 
     @Embedded

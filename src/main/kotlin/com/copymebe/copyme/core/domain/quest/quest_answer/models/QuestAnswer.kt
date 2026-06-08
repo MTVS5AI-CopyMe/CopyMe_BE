@@ -8,14 +8,14 @@ import java.util.*
 @Entity
 @Table(name = "quest_answer")
 class QuestAnswer protected constructor(
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id")
     val memberId: UUID,
 
     @ManyToOne
-    @JoinColumn(name = "quest_image_id", nullable = false)
+    @JoinColumn(name = "quest_image_id")
     val questImage: QuestImage,
 
-    @Column(name = "answer_image_url", nullable = false)
+    @Column(name = "answer_image_url")
     var answerImageUrl: String,
 
     @Embedded

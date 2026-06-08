@@ -6,17 +6,17 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "member_device_info")
 class MemberDeviceInfo protected constructor(
-    @Column(name = "device_uid", nullable = false)
+    @Column(name = "device_uid")
     var deviceUid: String,
 
-    @Column(name = "fcm_token", nullable = false)
+    @Column(name = "fcm_token")
     var fcmToken: String,
 
-    @Column(name = "refresh_token", nullable = false)
+    @Column(name = "refresh_token")
     var refreshToken: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     val member: Member
 ) : BaseEntity() {
     companion object {

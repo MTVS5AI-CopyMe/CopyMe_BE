@@ -8,7 +8,7 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "member_signup_authentication_manager")
 class MemberSignupAuthenticationManager protected constructor(
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     var email: String,
 
     @OneToMany(

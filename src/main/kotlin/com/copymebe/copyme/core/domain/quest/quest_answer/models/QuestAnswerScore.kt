@@ -7,11 +7,11 @@ import jakarta.persistence.Enumerated
 
 @Embeddable
 class QuestAnswerScore protected constructor(
-    @Column(name = "score", nullable = false)
+    @Column(name = "score")
     var score: Int,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "score_grade", nullable = false)
+    @Column(name = "score_grade")
     var scoreGrade: QuestAnswerScoreGrade
 ) {
     companion object {

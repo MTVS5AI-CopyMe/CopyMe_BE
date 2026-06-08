@@ -8,15 +8,15 @@ import org.hibernate.type.SqlTypes
 @Entity
 @Table(name = "quest_image")
 class QuestImage protected constructor(
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "image_url")
     var imageUrl: String,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false)
+    @Column(name = "category")
     var category: QuestImageCategory,
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     var tags: MutableList<String> = mutableListOf()
 ) : BaseEntity() {
     companion object {

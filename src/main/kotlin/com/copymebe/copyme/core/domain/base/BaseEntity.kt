@@ -5,6 +5,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
+import org.hibernate.annotations.SQLRestriction
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -13,20 +14,32 @@ import java.util.*
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
+@SQLRestriction("deleted_at IS NULL")
 abstract class BaseEntity {
     @Id
     val id: UUID = UuidCreator.getTimeOrderedEpoch()
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(
+        name = "created_at",
+        nullable = false,
+        updatable = false
+    )
     var createdAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(
+        name = "updated_at",
+        nullable = false
+    )
     var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
 
+    @Column(
+        name = "deleted_at",
+        nullable = true
+    )
     var deletedAt: LocalDateTime? = null
         protected set
 

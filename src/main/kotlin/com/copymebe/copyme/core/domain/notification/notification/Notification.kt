@@ -11,23 +11,23 @@ import java.util.*
 @Entity
 @Table(name = "notification")
 class Notification protected constructor(
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id")
     val memberId: UUID,
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     var title: String,
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     var description: String,
 
-    @Column(name = "event_key", nullable = false)
+    @Column(name = "event_key")
     var eventKey: String,
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "payload", nullable = false)
+    @Column(name = "payload")
     var payload: String,
 
-    @Column(name = "is_read", nullable = false)
+    @Column(name = "is_read")
     var isRead: Boolean = false,
 ) : BaseEntity() {
     companion object {

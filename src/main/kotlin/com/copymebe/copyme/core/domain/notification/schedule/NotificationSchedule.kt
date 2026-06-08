@@ -10,10 +10,10 @@ import java.util.*
 @Entity
 @Table(name = "notification_schedule")
 class NotificationSchedule protected constructor(
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id")
     val memberId: UUID,
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "time")
     var time: LocalTime,
 ) : BaseEntity() {
     companion object {

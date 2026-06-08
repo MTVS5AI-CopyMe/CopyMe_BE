@@ -8,14 +8,14 @@ import java.util.*
 @Entity
 @Table(name = "member_signup_authentication_manager_request")
 class MemberSignupAuthenticationManagerRequest protected constructor(
-    @Column(name = "auth_code", nullable = false)
+    @Column(name = "auth_code")
     var authCode: String,
 
-    @Column(name = "expired_at", nullable = false)
+    @Column(name = "expired_at")
     var expiredAt: LocalDateTime,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", nullable = false)
+    @JoinColumn(name = "manager_id")
     val manager: MemberSignupAuthenticationManager
 ) : BaseEntity() {
     companion object {

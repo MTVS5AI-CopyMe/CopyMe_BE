@@ -5,10 +5,10 @@ import jakarta.persistence.Embeddable
 
 @Embeddable
 class Profile protected constructor(
-    @Column(name = "profile_image_url", nullable = false)
+    @Column(name = "profile_image_url")
     var profileImageUrl: String,
 
-    @Column(name = "profile_nickname", nullable = false)
+    @Column(name = "profile_nickname")
     var nickname: String,
 ) {
     companion object {
