@@ -5,6 +5,7 @@ import com.copymebe.copyme.core.domain.quest.quest_image.models.QuestImage
 import com.copymebe.copyme.core.domain.quest.quest_image.models.QuestImageCategory
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
+import org.apache.commons.io.input.BOMInputStream
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
@@ -59,7 +60,11 @@ private fun <T> Resource.useReader(
     block: (BufferedReader) -> T
 ): T {
     return this.inputStream.use { inputStream ->
-        InputStreamReader(inputStream, StandardCharsets.UTF_8)
+        val bomInputStream = BOMInputStream.builder()
+            .setInputStream(inputStream)
+            .get()
+
+        InputStreamReader(bomInputStream, StandardCharsets.UTF_8)
             .buffered()
             .use(block)
     }
